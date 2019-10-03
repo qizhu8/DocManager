@@ -41,11 +41,12 @@ def f_executeScriptsFromFile(filename):
         if not re.search(r'[^-;]+;', line):  # keep appending lines that don't end in ';'
             statement = statement + line
         else:  # when you get a line ending in ';' then exec statement and reset for next statement
+            print("reach the end of a complete line!!!!!!")
             statement = statement + line
-            # print("\n\n[DEBUG] Executing SQL statement:\n%s" % (statement))
             try:
                 cursor.execute(statement)
-                cursor.commit()
+                conn.commit()
+                statement = ""
             except Exception as e:
                 print("[WARN] MySQLError during execute statement")
                 print(e)
