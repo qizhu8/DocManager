@@ -62,9 +62,12 @@ class DocManager(object):
         return True
 
     # custom search interface
-    def search(self.sql):
+    def search(self, sql):
         self._isConnect()
 
         self.cursor.execute(sql)
         searchResult = np.array(self.cursor.fetchall())
         return searchResult
+
+    # insert a bibDic object
+    def insertDocFromBibDic(self, title, year, )
