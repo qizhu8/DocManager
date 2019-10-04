@@ -41,7 +41,7 @@ def f_executeScriptsFromFile(filename):
         if not re.search(r'[^-;]+;', line):  # keep appending lines that don't end in ';'
             statement = statement + line
         else:  # when you get a line ending in ';' then exec statement and reset for next statement
-            print("reach the end of a complete line!!!!!!")
+            # print("reach the end of a complete line!!!!!!")
             statement = statement + line
             try:
                 cursor.execute(statement)

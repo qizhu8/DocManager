@@ -1,13 +1,20 @@
 -- create database if not exists papers ;
 -- use papers;
+-- order cares, because of the dependence
+DROP TABLE IF EXISTS Possess;
+DROP TABLE IF EXISTS Connection;
+DROP TABLE IF EXISTS Document;
+DROP TABLE IF EXISTS Author;
+
 -- create table for papers/topics
 CREATE TABLE IF NOT EXISTS Document(
-  docID INT PRIMARY KEY auto_increment,
+  docID VARCHAR(255) PRIMARY KEY,
   name TEXT NOT NULL,
   year INT(4),
   source TEXT,
   type INT(2),
-  description TEXT
+  description TEXT,
+  bib TEXT
 );
 -- create table for authors
 CREATE TABLE IF NOT EXISTS Author(
@@ -19,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Author(
 );
 -- create table for author-paper relation
 CREATE TABLE IF NOT EXISTS Possess(
-  docID INT NOT NULL,
+  docID VARCHAR(255) NOT NULL,
   authorID INT NOT NULL,
   description TEXT,
   FOREIGN KEY (docID) REFERENCES Document(docID),
@@ -28,8 +35,8 @@ CREATE TABLE IF NOT EXISTS Possess(
 );
 -- create table for papers relation
 CREATE TABLE IF NOT EXISTS Connection(
-  srcDocId INT NOT NULL,
-  dstDocId INT NOT NULL,
+  srcDocId VARCHAR(255) NOT NULL,
+  dstDocId VARCHAR(255) NOT NULL,
   description TEXT,
   FOREIGN KEY (srcDocId) REFERENCES Document(docID),
   FOREIGN KEY (dstDocId) REFERENCES Document(docID),
