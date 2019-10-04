@@ -2,43 +2,41 @@
 #!/usr/bin/env python3
 
 import bibtexparser
+from bibtexparser.bwriter import BibTexWriter
+from bibtexparser.bibdatabase import BibDatabase
 
-""" some test bib """
-paper1 = """@article{bar2011index,
-  title={Index coding with side information},
-  author={Bar-Yossef, Ziv and Birk, Yitzhak and Jayram, TS and Kol, Tomer},
-  journal={IEEE Transactions on Information Theory},
-  volume={57},
-  number={3},
-  pages={1479--1494},
-  year={2011},
-  publisher={IEEE}
-}"""
+import os
 
-paper2 = """@inproceedings{birk1998informed,
-  title={Informed-source coding-on-demand (ISCOD) over broadcast channels},
-  author={Birk, Yitzhak and Kol, Tomer},
-  booktitle={Proceedings. IEEE INFOCOM'98, the Conference on Computer Communications. Seventeenth Annual Joint Conference of the IEEE Computer and Communications Societies. Gateway to the 21st Century (Cat. No. 98},
-  volume={3},
-  pages={1257--1264},
-  year={1998},
-  organization={IEEE}
-}"""
+sample_bib_file = os.path.join('data', 'mybib.bib')
+with open(sample_bib_file) as bibfile:
+    bibDicList = bibtexparser.load(bibfile).entries
 
-bibDicList = bibtexparser.loads(paper2).entries
-print(bibtexparser.loads(paper2).strings)
+# loads() is for string, load() is for file
+print(bibDicList)
+
+# instance for writing...
+db = BibDatabase()
+writer = BibTexWriter()
+writer.indent = ' '*4     # indent entries with 4 spaces instead of one
+writer.comma_first = True  # place the comma at the beginning of the line
 
 for bibDic in bibDicList:
     for key in bibDic:
         print("{key}: {val}".format(key=key, val=bibDic[key]))
 
+    type = bibDic['ENTRYTYPE']
     id = bibDic['ID']
     year = bibDic['year']
-    source = bibDic['journal']
+    title = bibDic['title']
+    # source = bibDic['journal']
     author = bibDic['author'].split('and')
 
     print("="*20)
+    print(type)
     print(id)
+    print(title)
     print(year)
-    print(source)
+    # print(source)
     print(author)
+    db.entries = [bibDic]
+    print(writer.write(db))
