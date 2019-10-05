@@ -18,7 +18,7 @@ print(bibDicList)
 db = BibDatabase()
 writer = BibTexWriter()
 writer.indent = ' '*4     # indent entries with 4 spaces instead of one
-writer.comma_first = True  # place the comma at the beginning of the line
+writer.comma_first = False  # place the comma at the beginning of the line
 
 for bibDic in bibDicList:
     for key in bibDic:
@@ -28,6 +28,11 @@ for bibDic in bibDicList:
     id = bibDic['ID']
     year = bibDic['year']
     title = bibDic['title']
+
+    source = ""
+    for possbleSource in ['journal', 'booktitle', 'publisher']:
+        if possbleSource in bibDic:
+            source = bibDic[possbleSource]
     # source = bibDic['journal']
     author = bibDic['author'].split('and')
 
@@ -39,4 +44,5 @@ for bibDic in bibDicList:
     # print(source)
     print(author)
     db.entries = [bibDic]
-    print(writer.write(db))
+    bib = writer.write(db)
+    print(bib)

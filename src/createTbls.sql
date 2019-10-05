@@ -9,10 +9,10 @@ DROP TABLE IF EXISTS Author;
 -- create table for papers/topics
 CREATE TABLE IF NOT EXISTS Document(
   docID VARCHAR(255) PRIMARY KEY,
-  name TEXT NOT NULL,
+  title TEXT NOT NULL,
   year INT(4),
   source TEXT,
-  type INT(2),
+  type VARCHAR(30),
   description TEXT,
   bib TEXT
 );
