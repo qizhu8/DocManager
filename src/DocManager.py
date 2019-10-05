@@ -4,6 +4,8 @@
 import MySQLdb
 import numpy as np
 import re
+import os
+import json
 import bibtexparser
 from bibtexparser.bwriter import BibTexWriter
 from bibtexparser.bibdatabase import BibDatabase
@@ -109,8 +111,9 @@ class DocManager(object):
         try:
             self.cursor.execute(SQL)
             self.conn.commit()
+            print("[+] Insert %s %s" % (type, docId))
         except Exception as e:
-            print("[-] Cannot insert document %s" % docId)
+            print("[-] Cannot insert %s %s" % (type, docId))
             print(e)
             # print("SQL: %s" % SQL)
 
@@ -174,28 +177,69 @@ class DocManager(object):
                             description=description,
                             bib=bib)
 
-            print("[+] insert doc item %s" % docId)
-
         except Exception as e:
             print("[-] Cannot insert current bib item")
             print(e)
         # finally:
         #     self.closeConn()
 
-    def insertDocFromBibFile(self, bibFileName):
+    def insertDocFromBibFile(self, bibFileName, deleteAfterInsert=False):
+        if not os.path.getsize(bibFileName):
+            return
+
         with open(bibFileName) as bibfile:
             bibDicList = bibtexparser.load(bibfile).entries
 
         self.insertDocFromDictList(bibDicList)
 
-    def insertTopic(self, topicId, name):
+        if deleteAfterInsert:
+            with open(bibFileName, 'w') as bibfile:
+                bibfile.write("")
+
+    def insertTopic(self, topicId, name, year="NULL", description="NULL"):
         self._insertDoc(docId=topicId,
                         title=name,
                         type='topic',
                         year='NULL',
                         source='NULL',
-                        description='NULL',
+                        description=description,
                         bib='NULL')
+
+    def insertTopicFromFile(self, jsonFilename, deleteAfterInsert=False):
+        if not os.path.getsize(jsonFilename):
+            return
+
+        with open(jsonFilename) as topicFp:
+            dicList = json.load(topicFp)
+        self.insertTopicFromDicList(dicList=dicList)
+
+        if deleteAfterInsert:
+            with open(jsonFilename, 'w') as topicFp:
+                topicFp.write("")
+
+    def insertTopicFromDicList(self, dicList):
+        for dic in dicList:
+            self.insertTopicFromDic(dic)
+
+    def insertTopicFromDic(self, dic):
+        # check keys
+        requiredKeys = {"topicId", "name"}
+        addupKeys = {"description", "year"}
+        for checkKey in requiredKeys:
+            if checkKey not in dic:
+                print("[-] topic dictionary must contain %s" % checkKey)
+                return
+        for checkKey in addupKeys:
+            if checkKey not in dic:
+                dic[checkKey] = "NULL"
+
+        self.insertTopic(
+            topicId=dic["topicId"],
+            name=dic["name"],
+            year=dic["year"],
+            description=dic["description"]
+            )
+
 
     """ delete a document """
     def deleteDoc(self, docId):
@@ -224,9 +268,50 @@ class DocManager(object):
         SQL = """INSERT INTO Connection(srcDocId, dstDocId, description) VALUE("{srcDocId}", "{dstDocId}", "{description}");""".format(
             srcDocId=srcDocId,
             dstDocId=dstDocId,
-            description=description
+            description=description.replace('"', '""')
         )
-        self._execSql(SQL)
+        try:
+            self.cursor.execute(SQL)
+            self.conn.commit()
+            print("[+] Insert connection pair %s - %s" % (srcDocId, dstDocId))
+        except Exception as e:
+            print("[-] Cannot insert connection %s - %s" % (srcDocId, dstDocId))
+            print(e)
+
+
+    def addConnectionFromFile(self, jsonFilename, deleteAfterInsert=False):
+        if not os.path.getsize(jsonFilename):
+            return
+
+        with open(jsonFilename) as connectionFp:
+            dicList = json.load(connectionFp)
+        self.addConnectionFromDicList(dicList=dicList)
+
+        if deleteAfterInsert:
+            with open(jsonFilename, 'w') as connectionFp:
+                connectionFp.write("")
+
+    def addConnectionFromDicList(self, dicList):
+        for dic in dicList:
+            self.addConnectionFromDic(dic)
+
+    def addConnectionFromDic(self, dic):
+        # check key
+        requiredKeys = {"srcDocId", "dstDocId"}
+        addupKeys = {"description"}
+        for checkKey in requiredKeys:
+            if checkKey not in dic:
+                print("[-] connection dictionary must contain %s" % checkKey)
+                return
+        for checkKey in addupKeys:
+            if checkKey not in dic:
+                dic[checkKey] = "NULL"
+        self.addConnection(
+                            srcDocId=dic["srcDocId"],
+                            dstDocId=dic["dstDocId"],
+                            description=dic["description"]
+                            )
+
 
     """delete connection"""
     def delConnection(self, srcDocId, dstDocId):
