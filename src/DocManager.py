@@ -95,21 +95,25 @@ class DocManager(object):
             return
 
     """insert into the DB system"""
+
     def _insertDoc(self, docId, title, type, year="NULL", source="NULL", description="NULL", bib="NULL"):
         SQL = """INSERT INTO Document(docID, title, type, year, source, description, bib) VALUES ("{docId}", "{title}", "{type}", {year}, "{source}", "{description}", "{bib}")""".format(
-            docId=docId,
-            title=title,
-            type=type,
+            docId=docId.replace('"', '""'),
+            title=title.replace('"', '""'),
+            type=type.replace('"', '""'),
             year=year,
-            source=source,
-            description=description,
-            bib=bib
+            source=source.replace('"', '""'),
+            description=description.replace('"', '""'),
+            bib=bib.replace('"', '""')
         )
         try:
             self.cursor.execute(SQL)
             self.conn.commit()
         except Exception as e:
-            print("[-] Cannot insert document %s" % docDic["docId"])
+            print("[-] Cannot insert document %s" % docId)
+            print(e)
+            # print("SQL: %s" % SQL)
+
 
     def insertDocFromDict(self, docDic):
         requiredKeys = {'title', 'type', 'docId'}
@@ -152,7 +156,6 @@ class DocManager(object):
             year = bibDic['year']
             title = bibDic['title']
 
-
             source = ""
             for possbleSource in ['journal', 'booktitle', 'publisher']:
                 if possbleSource in bibDic:
@@ -194,11 +197,70 @@ class DocManager(object):
                         description='NULL',
                         bib='NULL')
 
+    """ delete a document """
     def deleteDoc(self, docId):
         SQL = """DELETE FROM Document WHERE docID="{docId}"; """.format(docId=docId)
         self._execSql(SQL)
 
-    def getAllDoc(self):
+    """ get documents """
+    def getAllDocs(self):
         SQL = """SELECT docId, title, type FROM Document;"""
-
         return self._search(SQL)
+
+    def getDocById(self, docId):
+        SQL = """SELECT docId, title, type, year, source, description, bib FROM Document WHERE docID="{docId}";""".format(docId=docId)
+        return self._search(SQL)
+
+    def getAllTopics(self):
+        SQL = """SELECT docId, title FROM Document WHERE type="topic";"""
+        return self._search(SQL)
+
+
+    """add connection"""
+    def addConnection(self, srcDocId, dstDocId, description=""):
+        if dstDocId == srcDocId:
+            print("srcDocId shouldn't equal dstDocId")
+            return
+        SQL = """INSERT INTO Connection(srcDocId, dstDocId, description) VALUE("{srcDocId}", "{dstDocId}", "{description}");""".format(
+            srcDocId=srcDocId,
+            dstDocId=dstDocId,
+            description=description
+        )
+        self._execSql(SQL)
+
+    """delete connection"""
+    def delConnection(self, srcDocId, dstDocId):
+        SQL = """DELETE FROM Connection WHERE srcDocId="{srcDocId}" and dstDocId="{dstDocId}"; """.format(srcDocId=srcDocId, dstDocId=dstDocId)
+        self._execSql(SQL)
+
+    """get connections"""
+    def getAncestors(self, tgtDocId):
+        SQL = """SELECT docId, title, type FROM Document WHERE docId in (SELECT srcDocId FROM Connection WHERE dstDocId="{tgtDocId}");""".format(tgtDocId=tgtDocId)
+        return self._search(SQL)
+
+    def getDescendants(self, tgtDocId):
+        SQL = """SELECT docId, title, type FROM Document WHERE docId in (SELECT srcDocId FROM Connection WHERE srcDocId="{tgtDocId}");""".format(tgtDocId=tgtDocId)
+        return self._search(SQL)
+
+
+    """modify Document"""
+    def modifyDocument(self, docId, category, newVal):
+        if isinstance(newVal, str): # manually add double quotation marks
+            newVal = '"{%s}"' % newVal
+        SQL = """UPDATE Document SET {category}={newVal} WHERE docId="{docId}"; """.format(
+            category=category,
+            newVal=newVal,
+            docID=docId
+        )
+        self._execSql(SQL)
+
+    """modify Connection"""
+    def modifyConnectionDescription(self, srcDocId, dstDocId, description):
+        if isinstance(newVal, str): # manually add double quotation marks
+            newVal = '"{%s}"' % newVal
+        SQL = """UPDATE Connection SET description={description} WHERE srcDocId="{srcDocId}" and dstDocId="{dstDocId}"; """.format(
+            description=description,
+            srcDocId=srcDocId,
+            dstDocId=dstDocId
+        )
+        self._execSql(SQL)

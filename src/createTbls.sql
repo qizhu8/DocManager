@@ -1,16 +1,10 @@
 -- create database if not exists papers ;
 -- use papers;
--- order cares, because of the dependence
-DROP TABLE IF EXISTS Possess;
-DROP TABLE IF EXISTS Connection;
-DROP TABLE IF EXISTS Document;
-DROP TABLE IF EXISTS Author;
-
 -- create table for papers/topics
 CREATE TABLE IF NOT EXISTS Document(
   docID VARCHAR(255) PRIMARY KEY,
   title TEXT NOT NULL,
-  year INT(4),
+  year INTEGER,
   source TEXT,
   type VARCHAR(30),
   description TEXT,
@@ -18,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Document(
 );
 -- create table for authors
 CREATE TABLE IF NOT EXISTS Author(
-  authorID INT PRIMARY KEY auto_increment,
+  authorID INTEGER PRIMARY KEY auto_increment,
   lastname VARCHAR(255) NOT NULL,
   firstname VARCHAR(255) NOT NULL,
   organization VARCHAR(255),
@@ -27,10 +21,10 @@ CREATE TABLE IF NOT EXISTS Author(
 -- create table for author-paper relation
 CREATE TABLE IF NOT EXISTS Possess(
   docID VARCHAR(255) NOT NULL,
-  authorID INT NOT NULL,
+  authorID INTEGER NOT NULL,
   description TEXT,
-  FOREIGN KEY (docID) REFERENCES Document(docID),
-  FOREIGN KEY (authorID) REFERENCES Author(authorID),
+  FOREIGN KEY (docID) REFERENCES Document(docID) ON DELETE CASCADE,
+  FOREIGN KEY (authorID) REFERENCES Author(authorID) ON DELETE CASCADE,
   PRIMARY KEY (docID, authorID)
 );
 -- create table for papers relation
@@ -38,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Connection(
   srcDocId VARCHAR(255) NOT NULL,
   dstDocId VARCHAR(255) NOT NULL,
   description TEXT,
-  FOREIGN KEY (srcDocId) REFERENCES Document(docID),
-  FOREIGN KEY (dstDocId) REFERENCES Document(docID),
+  FOREIGN KEY (srcDocId) REFERENCES Document(docID) ON DELETE CASCADE,
+  FOREIGN KEY (dstDocId) REFERENCES Document(docID) ON DELETE CASCADE,
   PRIMARY KEY (srcDocId, dstDocId)
 );
