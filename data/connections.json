@@ -1,0 +1,18 @@
+[
+  {"srcDocId": "birk1998informed",
+    "dstDocId": "bar2011index",
+    "description": "This is a description with \"quota\". "
+  },
+  {"srcDocId": "shamir1979share",
+    "dstDocId": "ravindrakumar2018private",
+    "description": " Private Coded Caching using Secret Sharing "
+  },
+  {"srcDocId": "maddah2014fundamental",
+    "dstDocId": "ravindrakumar2018private",
+    "description": " Private Coded Caching using Secret Sharing "
+  },
+  {"srcDocId": "Coded Caching",
+    "dstDocId": "ravindrakumar2018private",
+    "description": " Private Coded Caching using Secret Sharing "
+  }
+]

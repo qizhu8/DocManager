@@ -30,5 +30,7 @@ docManager.addConnectionFromFile(connfile, deleteAfterInsert=False)
 
 
 docManager.exportDocs()
+docManager.exportTopics()
+docManager.exportConnections()
 
 docManager.closeConn()

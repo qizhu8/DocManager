@@ -355,12 +355,32 @@ class DocManager(object):
 
     """export docs to bib, export topics and connections to json files """
     def exportDocs(self, filename="mybib.bib.bk"):
-        SQL = "SELECT description, bib FROM Document;"
+        SQL = "SELECT description, bib FROM Document WHERE type != 'topic';"
         docsInfo = self._search(SQL)
         bibDicList = []
         for description, bib in docsInfo:
             bibDicList += bibtexparser.loads(bib).entries
             bibDicList[-1]['description'] = description
         self.db.entries = bibDicList
-        with open(filename, "w") as fp:
-            fp.write(self.writer.write(self.db))
+        with open(filename, 'w') as bibtexFp:
+            bibtexparser.dump(self.db, bibtexFp)
+
+    def exportTopics(self, filename="topics.json.bk"):
+        SQL = "SELECT docID, title, description FROM Document WHERE type = 'topic';"
+        topicInfo = self._search(SQL)
+        listForJson = []
+        for docId, title, description in topicInfo:
+            listForJson.append({"topicId":docId, "name":title, "description":description})
+
+        with open(filename, 'w') as jsonFp:
+            json.dump(listForJson, jsonFp, indent=4, separators=(',', ': '))
+
+    def exportConnections(self, filename="connections.json.bk"):
+        SQL = "SELECT srcDocId, dstDocId, description FROM Connection;"
+        connectionInfo = self._search(SQL)
+        listForJson = []
+        for srcDocId, dstDocId, description in connectionInfo:
+            listForJson.append({"srcDocId":srcDocId, "dstDocId":dstDocId, "description":description})
+
+        with open(filename, 'w') as jsonFp:
+            json.dump(listForJson, jsonFp, indent=4, separators=(',', ': '))
