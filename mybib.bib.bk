@@ -1,0 +1,376 @@
+@article{ahlgren2012survey,
+    author = {Ahlgren, Bengt and Dannewitz, Christian and Imbrenda, Claudio and Kutscher, Dirk and Ohlman, Borje},
+    description = {},
+    journal = {IEEE Communications Magazine},
+    number = {7},
+    pages = {26--36},
+    publisher = {IEEE},
+    title = {A survey of information-centric networking},
+    volume = {50},
+    year = {2012}
+}
+
+@inproceedings{ajaykrishnan2015critical,
+    author = {Ajaykrishnan, N and Prem, Navya S and Prabhakaran, Vinod M and Vaze, Rahul},
+    booktitle = {2015 Twenty First National Conference on Communications (NCC)},
+    description = {},
+    organization = {IEEE},
+    pages = {1--6},
+    title = {Critical database size for effective caching},
+    year = {2015}
+}
+
+@article{alhassoun2019towards,
+    author = {AlHassoun, Yousef and Alotaibi, Faisal and Gamal, Aly El and Gamal, Hesham El},
+    description = {},
+    journal = {arXiv preprint arXiv:1902.04600},
+    title = {Towards Jointly Optimal Placement and Delivery: To Code or Not to Code in Wireless Caching Networks},
+    year = {2019}
+}
+
+@inproceedings{awan2018bounds,
+    author = {Awan, Zohaib Hassan and Mathar, Rudolf},
+    booktitle = {2018 15th International Symposium on Wireless Communication Systems (ISWCS)},
+    description = {},
+    organization = {IEEE},
+    pages = {1--5},
+    title = {Bounds on caching D2D networks with secure delivery},
+    year = {2018}
+}
+
+@inproceedings{bahrami2017towards,
+    author = {Bahrami, Mohsen and Attia, Mohamed Adel and Tandon, Ravi and Vasi{'c}, Bane},
+    booktitle = {2017 55th Annual Allerton Conference on Communication, Control, and Computing (Allerton)},
+    description = {},
+    organization = {IEEE},
+    pages = {878--885},
+    title = {Towards the exact rate-memory trade-off for uncoded caching with secure delivery},
+    year = {2017}
+}
+
+@article{bar2011index,
+    author = {Bar-Yossef, Ziv and Birk, Yitzhak and Jayram, TS and Kol, Tomer},
+    description = {},
+    journal = {IEEE Transactions on Information Theory},
+    number = {3},
+    pages = {1479--1494},
+    publisher = {IEEE},
+    title = {Index coding with side information},
+    volume = {57},
+    year = {2011}
+}
+
+@article{bari2012survey,
+    author = {Bari, Md Faizul and Chowdhury, Shihabur Rahman and Ahmed, Reaz and Boutaba, Raouf and Mathieu, Bertrand},
+    description = {},
+    journal = {IEEE Communications Magazine},
+    number = {12},
+    pages = {44--53},
+    publisher = {IEEE},
+    title = {A survey of naming and routing in information-centric networks},
+    volume = {50},
+    year = {2012}
+}
+
+@article{biham1991differential,
+    author = {Biham, Eli and Shamir, Adi},
+    description = {},
+    journal = {Journal of CRYPTOLOGY},
+    number = {1},
+    pages = {3--72},
+    publisher = {Springer},
+    title = {Differential cryptanalysis of DES-like cryptosystems},
+    volume = {4},
+    year = {1991}
+}
+
+@inproceedings{birk1998informed,
+    author = {Birk, Yitzhak and Kol, Tomer},
+    booktitle = {Proceedings. IEEE INFOCOM'98, the Conference on Computer Communications. Seventeenth Annual Joint Conference of the IEEE Computer and Communications Societies. Gateway to the 21st Century (Cat. No. 98},
+    description = {},
+    organization = {IEEE},
+    pages = {1257--1264},
+    title = {Informed-source coding-on-demand (ISCOD) over broadcast channels},
+    volume = {3},
+    year = {1998}
+}
+
+@inproceedings{breslau1999web,
+    author = {Breslau, Lee and Cao, Pei and Fan, Li and Phillips, Graham and Shenker, Scott},
+    booktitle = {INFOCOM'99. Eighteenth Annual Joint Conference of the IEEE Computer and Communications Societies. Proceedings. IEEE},
+    description = {},
+    organization = {IEEE},
+    pages = {126--134},
+    title = {Web caching and Zipf-like distributions: Evidence and implications},
+    volume = {1},
+    year = {1999}
+}
+
+@article{conrad2004probability,
+    author = {Conrad, Keith},
+    description = {},
+    journal = {Entropy},
+    number = {452},
+    pages = {10},
+    title = {Probability distributions and maximum entropy},
+    volume = {6},
+    year = {2004}
+}
+
+@inproceedings{engelmann2017content,
+    author = {Engelmann, Felix and Elia, Petros},
+    booktitle = {2017 15th International Symposium on Modeling and Optimization in Mobile, Ad Hoc, and Wireless Networks (WiOpt)},
+    description = {},
+    organization = {IEEE},
+    pages = {1--6},
+    title = {A content-delivery protocol, exploiting the privacy benefits of coded caching},
+    year = {2017}
+}
+
+@article{ghasemi2017improved,
+    author = {Ghasemi, Hooshang and Ramamoorthy, Aditya},
+    description = {},
+    journal = {IEEE Transactions on Information Theory},
+    number = {7},
+    pages = {4388--4413},
+    publisher = {IEEE},
+    title = {Improved lower bounds for coded caching},
+    volume = {63},
+    year = {2017}
+}
+
+@article{index2017global,
+    author = {Index, Cisco Visual Networking},
+    description = {},
+    journal = {Cisco: San Jose, CA, USA},
+    title = {Global mobile data traffic forecast update, 2016--2021 white paper},
+    year = {2017}
+}
+
+@article{ji2014order,
+    author = {Ji, Mingyue and Tulino, Antonia M and Llorca, Jaime and Caire, Giuseppe},
+    description = {},
+    journal = {arXiv preprint arXiv:1402.4572},
+    publisher = {Citeseer},
+    title = {Order optimal coded delivery and caching: Multiple groupcast index coding},
+    year = {2014}
+}
+
+@book{lazar2016teaching,
+    author = {Lazar, Jim and others},
+    description = {},
+    publisher = {Regulatory Assistance Project},
+    title = {Teaching the" duck" to Fly},
+    year = {2016}
+}
+
+@article{maddah2014fundamental,
+    author = {Maddah-Ali, Mohammad Ali and Niesen, Urs},
+    description = {},
+    journal = {IEEE Transactions on Information Theory},
+    number = {5},
+    pages = {2856--2867},
+    publisher = {IEEE},
+    title = {Fundamental limits of caching},
+    volume = {60},
+    year = {2014}
+}
+
+@article{maddah2015decentralized,
+    author = {Maddah-Ali, Mohammad Ali and Niesen, Urs},
+    description = {},
+    journal = {IEEE/ACM Transactions on Networking (TON)},
+    number = {4},
+    pages = {1029--1040},
+    publisher = {IEEE Press},
+    title = {Decentralized coded caching attains order-optimal memory-rate tradeoff},
+    volume = {23},
+    year = {2015}
+}
+
+@article{mangili2016bandwidth,
+    author = {Mangili, Michele and Martignon, Fabio and Paris, Stefano and Capone, Antonio},
+    description = {},
+    journal = {IEEE Transactions on Vehicular Technology},
+    number = {1},
+    pages = {679--695},
+    publisher = {IEEE},
+    title = {Bandwidth and cache leasing in wireless information-centric networks: A game-theoretic study},
+    volume = {66},
+    year = {2016}
+}
+
+@inproceedings{mauri2014tradeoff,
+    author = {Mauri, Giulia and Verticale, Giacomo},
+    booktitle = {2014 6th International Conference on New Technologies, Mobility and Security (NTMS)},
+    description = {},
+    organization = {IEEE},
+    pages = {1--5},
+    title = {On the tradeoff between performance and user privacy in information centric networking},
+    year = {2014}
+}
+
+@inproceedings{psaras2012probabilistic,
+    author = {Psaras, Ioannis and Chai, Wei Koong and Pavlou, George},
+    booktitle = {Proceedings of the second edition of the ICN workshop on Information-centric networking},
+    description = {},
+    organization = {ACM},
+    pages = {55--60},
+    title = {Probabilistic in-network caching for information-centric networks},
+    year = {2012}
+}
+
+@inproceedings{rajagopalan2011smart,
+    author = {Rajagopalan, S Raj and Sankar, Lalitha and Mohajer, Soheil and Poor, H Vincent},
+    booktitle = {2011 IEEE international conference on smart grid communications (SmartGridComm)},
+    description = {},
+    organization = {IEEE},
+    pages = {190--195},
+    title = {Smart meter privacy: A utility-privacy framework},
+    year = {2011}
+}
+
+@article{ravindrakumar2018private,
+    author = {Ravindrakumar, Vaishakh and Panda, Parthasarathi and Karamchandani, Nikhil and Prabhakaran, Vinod M},
+    description = {},
+    journal = {IEEE Transactions on Information Forensics and Security},
+    number = {3},
+    pages = {685--694},
+    publisher = {IEEE},
+    title = {Private Coded Caching},
+    volume = {13},
+    year = {2018}
+}
+
+@inproceedings{salama2018privacy,
+    author = {Salama, Ahmed M and Li, Ming and Lazos, Loukas and Xiao, Yong and Krunz, Marwan},
+    booktitle = {2018 IEEE International Symposium on Dynamic Spectrum Access Networks (DySPAN)},
+    description = {},
+    organization = {IEEE},
+    pages = {1--10},
+    title = {On the Privacy and Utility Tradeoff in Database-Assisted Dynamic Spectrum Access},
+    year = {2018}
+}
+
+@inproceedings{sankar2010theory,
+    author = {Sankar, Lalitha and Rajagopalan, S Raj and Poor, H Vincent},
+    booktitle = {2010 IEEE International Symposium on Information Theory},
+    description = {},
+    organization = {IEEE},
+    pages = {2642--2646},
+    title = {A theory of utility and privacy of data sources},
+    year = {2010}
+}
+
+@article{sengupta2015fundamental,
+    author = {Sengupta, Avik and Tandon, Ravi and Clancy, T Charles},
+    description = {},
+    journal = {IEEE Transactions on Information Forensics and Security},
+    number = {2},
+    pages = {355--370},
+    publisher = {IEEE},
+    title = {Fundamental limits of caching with secure delivery},
+    volume = {10},
+    year = {2015}
+}
+
+@article{shamir1979share,
+    author = {Shamir, Adi},
+    description = {},
+    journal = {Communications of the ACM},
+    number = {11},
+    pages = {612--613},
+    publisher = {ACm},
+    title = {How to share a secret},
+    volume = {22},
+    year = {1979}
+}
+
+@inproceedings{shukla2017proactive,
+    author = {Shukla, Samta and Abouzeid, Alhussein A},
+    booktitle = {INFOCOM 2017-IEEE Conference on Computer Communications, IEEE},
+    description = {},
+    organization = {IEEE},
+    pages = {1--9},
+    title = {Proactive retention aware caching},
+    year = {2017}
+}
+
+@inproceedings{wan2017novel,
+    author = {Wan, Kai and Tuninetti, Daniela and Piantanida, Pablo},
+    booktitle = {2017 Information Theory and Applications Workshop (ITA)},
+    description = {},
+    organization = {IEEE},
+    pages = {1--6},
+    title = {A novel index coding scheme and its application to coded caching},
+    year = {2017}
+}
+
+@article{wan2019coded,
+    author = {Wan, Kai and Caire, Giuseppe},
+    description = {},
+    journal = {arXiv preprint arXiv:1908.10821},
+    title = {On coded caching with private demands},
+    year = {2019}
+}
+
+@article{wang2015coded,
+    author = {Wang, Sinong and Li, Wenxin and Tian, Xiaohua and Liu, Hui},
+    description = {},
+    journal = {arXiv preprint arXiv:1504.01123},
+    title = {Coded caching with heterogenous cache sizes},
+    year = {2015}
+}
+
+@article{wang2015fundamental,
+    author = {Wang, Sinong and Li, Wenxin and Tian, Xiaohua and Liu, Hui},
+    description = {},
+    journal = {arXiv preprint arXiv:1504.01123},
+    title = {Fundamental limits of heterogenous cache},
+    year = {2015}
+}
+
+@article{wang2016information,
+    author = {Wang, Chien-Yi and Lim, Sung Hoon and Gastpar, Michael},
+    description = {},
+    journal = {IEEE Transactions on Information Theory},
+    number = {11},
+    pages = {6393--6406},
+    publisher = {IEEE},
+    title = {Information-theoretic caching: Sequential coding for computing},
+    volume = {62},
+    year = {2016}
+}
+
+@article{xu2017modeling,
+    author = {Xu, Xuejian and Tao, Meixia},
+    description = {test comments!!!!!::asdasdasdasdqwezxczxcvsldkfjghalwekiruhalxcvn,zx.xckjvjhalsd},
+    journal = {IEEE Transactions on Communications},
+    number = {8},
+    pages = {3415--3428},
+    publisher = {IEEE},
+    title = {Modeling, analysis, and optimization of coded caching in small-cell networks},
+    volume = {65},
+    year = {2017}
+}
+
+@article{yu2018characterizing,
+    author = {Yu, Qian and Maddah-Ali, Mohammad Ali and Avestimehr, A Salman},
+    description = {},
+    journal = {IEEE Transactions on Information Theory},
+    number = {1},
+    pages = {647--663},
+    publisher = {IEEE},
+    title = {Characterizing the rate-memory tradeoff in cache networks within a factor of 2},
+    volume = {65},
+    year = {2018}
+}
+
+@article{zewail2018device,
+    author = {Zewail, Ahmed A and Yener, Aylin},
+    description = {},
+    journal = {arXiv preprint arXiv:1809.06844},
+    title = {Device-to-Device secure coded caching},
+    year = {2018}
+}
+

@@ -17,15 +17,18 @@ topicfile = "data/topics.json"
 
 docManager = DocManager()
 docManager.initConn(username, password, dbName)
-# docManager.executeScriptsFromFile(sqlDelTblsFilePath) # drop tables. DEBUG only
-# docManager.executeScriptsFromFile(sqlInitFilePath)
+docManager.executeScriptsFromFile(sqlDelTblsFilePath) # drop tables. DEBUG only
+docManager.executeScriptsFromFile(sqlInitFilePath)
 
 """insert document test"""
-docManager.insertDocFromBibFile(bibfile, deleteAfterInsert=True)
+docManager.insertDocFromBibFile(bibfile, deleteAfterInsert=False)
 print("="*20)
-docManager.insertTopicFromFile(topicfile, deleteAfterInsert=True)
+docManager.insertTopicFromFile(topicfile, deleteAfterInsert=False)
 """conenct document test"""
 print("="*20)
-docManager.addConnectionFromFile(connfile, deleteAfterInsert=True)
+docManager.addConnectionFromFile(connfile, deleteAfterInsert=False)
+
+
+docManager.exportDocs()
 
 docManager.closeConn()

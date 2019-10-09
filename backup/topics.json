@@ -8,5 +8,15 @@
     "topicId": "Coded Caching",
     "name": "Coded Caching",
     "description": "NULL"
+  },
+  {
+    "topicId": "Security, Privacy and Anonymity",
+    "name": "Security, Privacy and Anonymity",
+    "description": "NULL"
+  },
+  {
+    "topicId": "Cryptography",
+    "name": "Cryptography",
+    "description": "NULL"
   }
 ]

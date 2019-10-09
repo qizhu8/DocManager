@@ -129,6 +129,7 @@ class DocManager(object):
             if checkKey not in docDic:
                 docDic[checkKey] = "NULL"
 
+        print("%s description is %s" % (docDic["docId"], docDic["description"]))
         self._insertDoc(docId=docDic["docId"],
                         title=docDic["title"],
                         type=docDic["type"],
@@ -158,6 +159,9 @@ class DocManager(object):
             docId = bibDic['ID']
             year = bibDic['year']
             title = bibDic['title']
+
+            if "description" in bibDic:
+                description = bibDic["description"]
 
             source = ""
             for possbleSource in ['journal', 'booktitle', 'publisher']:
@@ -189,7 +193,6 @@ class DocManager(object):
 
         with open(bibFileName) as bibfile:
             bibDicList = bibtexparser.load(bibfile).entries
-
         self.insertDocFromDictList(bibDicList)
 
         if deleteAfterInsert:
@@ -349,3 +352,15 @@ class DocManager(object):
             dstDocId=dstDocId
         )
         self._execSql(SQL)
+
+    """export docs to bib, export topics and connections to json files """
+    def exportDocs(self, filename="mybib.bib.bk"):
+        SQL = "SELECT description, bib FROM Document;"
+        docsInfo = self._search(SQL)
+        bibDicList = []
+        for description, bib in docsInfo:
+            bibDicList += bibtexparser.loads(bib).entries
+            bibDicList[-1]['description'] = description
+        self.db.entries = bibDicList
+        with open(filename, "w") as fp:
+            fp.write(self.writer.write(self.db))
