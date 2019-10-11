@@ -1,0 +1,16 @@
+{
+    "WINDOWS": {
+        "GUI_WIDTH": 1000,
+        "GUI_HEIGHT": 1000
+    },
+    "DBParams": {
+        "username": "root",
+        "password": "admin",
+        "dbName": "papers",
+        "sqlDelTblsFilePath": "src/dropTables.sql",
+        "sqlInitFilePath": "src/createTbls.sql",
+        "bibfile": "data/mybib.bib",
+        "connfile": "data/connections.json",
+        "topicfile": "data/topics.json"
+    }
+}
