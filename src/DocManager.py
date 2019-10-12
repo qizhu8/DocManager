@@ -327,18 +327,26 @@ class DocManager(object):
         return self._search(SQL)
 
     def getDescendants(self, tgtDocId):
-        SQL = """SELECT docId, title, type FROM Document WHERE docId in (SELECT srcDocId FROM Connection WHERE srcDocId="{tgtDocId}");""".format(tgtDocId=tgtDocId)
+        SQL = """SELECT docId, title, type FROM Document WHERE docId in (SELECT dstDocId FROM Connection WHERE srcDocId="{tgtDocId}");""".format(tgtDocId=tgtDocId)
         return self._search(SQL)
 
+    def getConnectionInfo(self, srcDocId, dstDocId):
+        SQL = """SELECT description FROM Connection WHERE srcDocId="{srcDocId}" AND dstDocId="{dstDocId}";""".format(srcDocId=srcDocId, dstDocId=dstDocId)
+        return self._search(SQL)
 
     """modify Document"""
     def modifyDocument(self, docId, category, newVal):
         if isinstance(newVal, str): # manually add double quotation marks
-            newVal = '"{%s}"' % newVal
-        SQL = """UPDATE Document SET {category}={newVal} WHERE docId="{docId}"; """.format(
+            SQL = """UPDATE Document SET {category}="{newVal}" WHERE docId="{docId}"; """.format(
+            category=category,
+            newVal=newVal.replace('"', '""'),
+            docId=docId
+        )
+        else:
+            SQL = """UPDATE Document SET {category}={newVal} WHERE docId="{docId}"; """.format(
             category=category,
             newVal=newVal,
-            docID=docId
+            docId=docId
         )
         self._execSql(SQL)
 
