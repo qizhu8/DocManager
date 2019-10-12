@@ -1,5 +1,8 @@
 # MACOS 
 .DS_Store
+*.json
+*.bib
+*.bk
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
