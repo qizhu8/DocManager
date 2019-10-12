@@ -352,8 +352,8 @@ class DocManager(object):
 
     """modify Connection"""
     def modifyConnectionDescription(self, srcDocId, dstDocId, description):
-        if isinstance(newVal, str): # manually add double quotation marks
-            newVal = '"{%s}"' % newVal
+        if isinstance(description, str): # manually add double quotation marks
+            description = '"%s"' % description
         SQL = """UPDATE Connection SET description={description} WHERE srcDocId="{srcDocId}" and dstDocId="{dstDocId}"; """.format(
             description=description,
             srcDocId=srcDocId,
@@ -392,3 +392,10 @@ class DocManager(object):
 
         with open(filename, 'w') as jsonFp:
             json.dump(listForJson, jsonFp, indent=4, separators=(',', ': '))
+
+
+    """search"""
+    def searchDocWithKeyword(self, keyword):
+        SQL = """SELECT docId, title, type FROM Document WHERE docId LIKE "%{keyword}%" OR title LIKE "%{keyword}%" OR description LIKE "%{keyword}%";""".format(keyword=keyword)
+
+        return self._search(SQL)

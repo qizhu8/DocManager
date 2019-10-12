@@ -1,7 +1,7 @@
 {
     "WINDOWS": {
-        "GUI_WIDTH": 870,
-        "GUI_HEIGHT": 732
+        "GUI_WIDTH": 769,
+        "GUI_HEIGHT": 1105
     },
     "DBParams": {
         "username": "root",

@@ -169,6 +169,7 @@ class DocManagerGUI(tk.Tk, object):
                 docId = self.document_info_ctl_dict['ancList'].get(item_id)
                 print(docId, " is chosen")
                 if docId != "No Document":
+                    print("show %s - %s" % (docId, self.curDocId))
                     self.__show_doc_info(docId)
                     self.__show_conn_info(docId, self.curDocId)
 
@@ -179,6 +180,7 @@ class DocManagerGUI(tk.Tk, object):
                 docId = self.document_info_ctl_dict['deceList'].get(item_id)
                 print(docId, " is chosen")
                 if docId != "No Document":
+                    print("show %s - %s" % (self.curDocId, docId))
                     self.__show_doc_info(docId)
                     self.__show_conn_info(self.curDocId, docId)
 
@@ -218,10 +220,48 @@ class DocManagerGUI(tk.Tk, object):
 
 
         def ancAdd_hit():
-            pass
+            self.docToConn = None
+            search_window = tk.Toplevel(self)
+            self.__show_search_window(search_window)
+            self.wait_window(search_window)
+            print("-"*10)
+            print(self.docToConn)
+            if self.docToConn is not None:
+                print("adding ancestor doc %s" % self.docToConn)
+                if self.document_info_ctl_dict['ancList'].get(0) == "No Document":
+                    self.document_info_ctl_dict['ancList'].delete(0, tk.END)
+                self.document_info_ctl_dict['ancList'].insert(tk.END, self.docToConn[0])
+                # insert the connection to database
+                self.docManager.addConnection(dstDocId=self.curDocId, srcDocId=self.docToConn[0], description="")
 
         def deceAdd_hit():
-            pass
+            self.docToConn = None
+            search_window = tk.Toplevel(self)
+            self.__show_search_window(search_window)
+            self.wait_window(search_window)
+            print("-"*10)
+            print(self.docToConn)
+            if self.docToConn is not None:
+                print("adding descendant doc %s" % self.docToConn)
+                if self.document_info_ctl_dict['deceList'].get(0) == "No Document":
+                    self.document_info_ctl_dict['deceList'].delete(0, tk.END)
+                self.document_info_ctl_dict['deceList'].insert(tk.END, self.docToConn[0])
+                self.docManager.addConnection(srcDocId=self.curDocId, dstDocId=self.docToConn[0], description="")
+
+        def ancDel_hit():
+            item_id = self.document_info_ctl_dict['ancList'].curselection()
+            if item_id is not None:
+                tgtdocId = self.document_info_ctl_dict['ancList'].get(item_id)
+                self.docManager.delConnection(srcDocId=tgtdocId, dstDocId=self.curDocId)
+                self.document_info_ctl_dict['ancList'].delete(item_id)
+
+
+        def deceDel_hit():
+            item_id = self.document_info_ctl_dict['deceList'].curselection()
+            if item_id is not None:
+                tgtdocId = self.document_info_ctl_dict['deceList'].get(item_id)
+                self.docManager.delConnection(dstDocId=tgtdocId, srcDocId=self.curDocId)
+                self.document_info_ctl_dict['deceList'].delete(item_id)
 
         def updateDoc_hit():
             title = self.document_info_ctl_dict['titleEntry'].get()
@@ -239,6 +279,11 @@ class DocManagerGUI(tk.Tk, object):
                     dstDocId=self.curConnPair[1],
                     description=description)
             print("update connection description %s-%s :\n %s" %(self.curConnPair[0], self.curConnPair[1], description))
+
+        def exportToLocal_hit():
+            self.docManager.exportDocs()
+            self.docManager.exportTopics()
+            self.docManager.exportConnections()
 
 
         row = 0 # next available row
@@ -278,17 +323,17 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['ancLabel'] = tk.Label(self.document_info_frame, text="ancesters:")
         self.document_info_ctl_dict['ancList'] = tk.Listbox(self.document_info_frame)
         self.document_info_ctl_dict['ancAddButton'] = tk.Button(self.document_info_frame, text="add ancesters", command=ancAdd_hit)
-        self.document_info_ctl_dict['ancDelButton'] = tk.Button(self.document_info_frame, text="del ancesters", command=ancAdd_hit)
+        self.document_info_ctl_dict['ancDelButton'] = tk.Button(self.document_info_frame, text="del ancesters", command=ancDel_hit)
 
         self.document_info_ctl_dict['deceLabel'] = tk.Label(self.document_info_frame, text="followers:")
         self.document_info_ctl_dict['deceList'] = tk.Listbox(self.document_info_frame)
         self.document_info_ctl_dict['deceAddButton'] = tk.Button(self.document_info_frame, text="add decendants", command=deceAdd_hit)
-        self.document_info_ctl_dict['deceDelButton'] = tk.Button(self.document_info_frame, text="del decendants", command=deceAdd_hit)
+        self.document_info_ctl_dict['deceDelButton'] = tk.Button(self.document_info_frame, text="del decendants", command=deceDel_hit)
 
         self.document_info_ctl_dict['ancLabel'].grid(row=row, column=0, sticky='we')
         self.document_info_ctl_dict['ancList'].grid(row=row, column=1, sticky='we')
-        self.document_info_ctl_dict['ancAddButton'].grid(row=row+1, column=0, sticky='we')
-        self.document_info_ctl_dict['ancDelButton'].grid(row=row+1, column=1, sticky='we')
+        self.document_info_ctl_dict['ancAddButton'].grid(row=row+1, column=1, sticky='we')
+        self.document_info_ctl_dict['ancDelButton'].grid(row=row+1, column=0, sticky='we')
         row += 2
 
         self.document_info_ctl_dict['deceLabel'].grid(row=row, column=0, sticky='we')
@@ -320,6 +365,9 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['updateDocButton'].grid(row=row, column=1, sticky='w')
         row += 1
 
+        self.document_info_ctl_dict['exportButton'] = tk.Button(self.document_info_frame, text="Export to local", command=exportToLocal_hit)
+        self.document_info_ctl_dict['exportButton'].grid(row=row, columnspan=3, sticky='w')
+        row += 1
 
 
 
@@ -402,6 +450,58 @@ class DocManagerGUI(tk.Tk, object):
 
     def __clear_conn_info(self):
         self.document_info_ctl_dict['connText'].delete('1.0', tk.END)
+
+    """search window"""
+    def __show_search_window(self, search_window):
+        self.searchRst = None
+        def filterRstList_double_click(evt):
+            item_id = filterRstList.curselection()
+            # docId = self.document_info_ctl_dict['deceList'].get(item_id)
+            # title = filterRstList.get(item_id)
+            self.docToConn = self.searchRst[item_id[0], :]
+            print("add %s" % self.docToConn)
+            search_window.destroy()
+
+        def keyword_search(evt):
+            keyword = keywordEntry.get()
+            self.searchRst = self.docManager.searchDocWithKeyword(keyword)
+            filterRstList.delete(0, tk.END)
+            if len(self.searchRst) > 0:
+
+                for idx, record in enumerate(self.searchRst):
+                    docId, title, type = record
+                    if type is "topic":
+                        descName = "topic - {title}".format(title=title)
+                    else:
+                        descName = title
+                    filterRstList.insert(idx, descName)
+
+
+
+        search_window.geometry("%dx%d+%d+%d" % (
+                    self.windowsParam['GUI_WIDTH']//2,
+                    self.windowsParam['GUI_HEIGHT']//2,
+                    self.winfo_screenwidth()/2 - self.windowsParam['GUI_WIDTH']//4,
+                    self.winfo_screenheight()/2 - self.windowsParam['GUI_HEIGHT'] // 4))
+        # keyword
+        keyword_frame = tk.Frame(search_window)
+        keywordLabel = tk.Label(keyword_frame, text="Keywords:")
+        keywordEntry = tk.Entry(keyword_frame, show=None)
+        filterRstList = tk.Listbox(keyword_frame)
+
+        filterRstList.bind("<Double-Button-1>", filterRstList_double_click)
+        keywordEntry.bind('<Return>', keyword_search)
+
+        keywordLabel.grid(sticky=tk.W)
+        keywordEntry.grid(row=0, column=1)
+        filterRstList.grid(columnspan=2, sticky=(tk.E, tk.W))
+
+        keyword_frame.pack()
+
+
+
+
+
 
 
     def __build_GUI(self):

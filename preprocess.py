@@ -17,8 +17,8 @@ topicfile = "data/topics.json"
 
 docManager = DocManager()
 docManager.initConn(username, password, dbName)
-docManager.executeScriptsFromFile(sqlDelTblsFilePath) # drop tables. DEBUG only
-docManager.executeScriptsFromFile(sqlInitFilePath)
+# docManager.executeScriptsFromFile(sqlDelTblsFilePath) # drop tables. DEBUG only
+# docManager.executeScriptsFromFile(sqlInitFilePath)
 
 """insert document test"""
 docManager.insertDocFromBibFile(bibfile, deleteAfterInsert=False)
