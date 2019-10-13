@@ -3,6 +3,8 @@
 *.json
 *.bib
 *.bk
+*.bib.bk
+*.json.bk
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

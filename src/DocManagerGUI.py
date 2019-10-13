@@ -6,6 +6,7 @@ import json
 import tkinter as tk
 import tkinter.scrolledtext as tkst
 import tkinter.messagebox as tkmsg
+import tkinter.filedialog as tkFileDialog
 from DocManager import DocManager
 
 VERSION = "1.0.0"
@@ -116,6 +117,10 @@ class DocManagerGUI(tk.Tk, object):
                 self.__show_doc_hier(docId)
 
         def __load_from_files():
+            loadFromFile_window = tk.Toplevel(self)
+            self.__loadFromFile_window(loadFromFile_window)
+            self.wait_window(loadFromFile_window)
+            self.__show_doc_list()
             pass
 
         # create each control and save them into a dict
@@ -270,6 +275,7 @@ class DocManagerGUI(tk.Tk, object):
 
             self.docManager.modifyDocument(self.curDocId, 'title', title)
             self.docManager.modifyDocument(self.curDocId, 'type', type)
+
             self.docManager.modifyDocument(self.curDocId, 'description', description)
 
         def updateConn_hit():
@@ -498,8 +504,86 @@ class DocManagerGUI(tk.Tk, object):
 
         keyword_frame.pack()
 
+    def __loadFromFile_window(self, loadFromFile_window):
 
+        row = 0
+        # loadFromFile_window.geometry("%dx%d+%d+%d" % (
+        #             self.windowsParam['GUI_WIDTH']//2,
+        #             self.windowsParam['GUI_HEIGHT']//2,
+        #             self.winfo_screenwidth()/2 - self.windowsParam['GUI_WIDTH']//4,
+        #             self.winfo_screenheight()/2 - self.windowsParam['GUI_HEIGHT'] // 4))
 
+        def __btn_choose_docBib():
+            newFilePath = tkFileDialog.askopenfilename(initialdir = ".",title = "Select file",filetypes = (("bibtext files","*.bib"),("backup files","*.bk"),("all files","*.*")))
+            if newFilePath:
+                newFilePath = os.path.relpath(newFilePath)
+                bibFilePath.delete(0, tk.END)
+                bibFilePath.insert(tk.END, newFilePath)
+
+        def __btn_load_docBib():
+            filepath = bibFilePath.get()
+            if len(filepath) > 0:
+                self.docManager.insertDocFromBibFile(filepath, deleteAfterInsert=False)
+
+        def __btn_choose_topic():
+            newFilePath = tkFileDialog.askopenfilename(initialdir = ".",title = "Select file",filetypes = (("json files","*.json"),("backup files","*.bk"),("all files","*.*")))
+            if newFilePath:
+                newFilePath = os.path.relpath(newFilePath)
+                topicFilePath.delete(0, tk.END)
+                topicFilePath.insert(tk.END, newFilePath)
+
+        def __btn_load_topic():
+            filepath = topicFilePath.get()
+            if len(filepath) > 0:
+                self.docManager.insertTopicFromFile(filepath, deleteAfterInsert=False)
+
+        def __btn_choose_conn():
+            newFilePath = tkFileDialog.askopenfilename(initialdir = ".",title = "Select file",filetypes = (("json files","*.json"),("backup files","*.bk"),("all files","*.*")))
+            if newFilePath:
+                newFilePath = os.path.relpath(newFilePath)
+                connectionFilePath.delete(0, tk.END)
+                connectionFilePath.insert(tk.END, newFilePath)
+
+        def __btn_load_conn():
+            filepath = connectionFilePath.get()
+            if len(filepath) > 0:
+                self.docManager.addConnectionFromFile(filepath, deleteAfterInsert=False)
+
+        # bib file
+        bibFileLabel = tk.Label(loadFromFile_window, text="Documents (.bib)")
+        bibFilePath = tk.Entry(loadFromFile_window, text="")
+        bibFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_docBib)
+        bibFileLoad = tk.Button(loadFromFile_window, text="load", command=__btn_load_docBib)
+
+        bibFileLabel.grid(row=row, column=0)
+        bibFilePath.grid(row=row, column=1)
+        bibFileChooser.grid(row=row, column=2)
+        bibFileLoad.grid(row=row, column=3)
+        row += 1
+
+        # topic json
+        topicFileLabel = tk.Label(loadFromFile_window, text="Topics (.json)")
+        topicFilePath = tk.Entry(loadFromFile_window, text="")
+        topicFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_topic)
+        topicFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_topic)
+
+        topicFileLabel.grid(row=row, column=0)
+        topicFilePath.grid(row=row, column=1)
+        topicFileChooser.grid(row=row, column=2)
+        topicFileLoad.grid(row=row, column=3)
+        row += 1
+
+        # connection json
+        connectionFileLabel = tk.Label(loadFromFile_window, text="Connections (.json)")
+        connectionFilePath = tk.Entry(loadFromFile_window, text="")
+        connectionFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_conn)
+        connectionFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_conn)
+
+        connectionFileLabel.grid(row=row, column=0)
+        connectionFilePath.grid(row=row, column=1)
+        connectionFileChooser.grid(row=row, column=2)
+        connectionFileLoad.grid(row=row, column=3, sticky="WE")
+        row += 1
 
 
 

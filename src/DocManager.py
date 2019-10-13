@@ -91,6 +91,7 @@ class DocManager(object):
         self._isConnect()
         try:
             self.cursor.execute(sql)
+            self.conn.commit()
         except Exception as e:
             print("[-] Cannot execute the sql:\n %s" % sql)
             print(e)
@@ -251,7 +252,7 @@ class DocManager(object):
 
     """ get documents """
     def getAllDocs(self):
-        SQL = """SELECT docId, title, type FROM Document;"""
+        SQL = """SELECT docId, title, type FROM Document ORDER BY title;"""
         return self._search(SQL)
 
     def getDocById(self, docId):
@@ -348,6 +349,7 @@ class DocManager(object):
             newVal=newVal,
             docId=docId
         )
+        print(SQL)
         self._execSql(SQL)
 
     """modify Connection"""
