@@ -7,6 +7,8 @@ import tkinter as tk
 import tkinter.scrolledtext as tkst
 import tkinter.messagebox as tkmsg
 import tkinter.filedialog as tkFileDialog
+import bibtexparser
+
 from DocManager import DocManager
 
 VERSION = "1.0.0"
@@ -151,11 +153,15 @@ class DocManagerGUI(tk.Tk, object):
         self.document_list_ctl_dict['list'].delete(0, tk.END)
         for idx, record in enumerate(self.docManager.getAllDocs()):
             docId, title, type = record
-            if type is "topic":
+            if type == "topic":
                 descName = "topic - {title}".format(title=title)
+                self.document_list_ctl_dict['list'].insert(idx, descName)
+                self.document_list_ctl_dict['list'].itemconfig(idx, {'fg': 'orange'})
             else:
                 descName = title
-            self.document_list_ctl_dict['list'].insert(idx, descName)
+                self.document_list_ctl_dict['list'].insert(idx, descName)
+                self.document_list_ctl_dict['list'].itemconfig(idx, {'fg': 'blue'})
+
             self.document_list_ctl_dict['itemKey'].append(docId)
 
 
@@ -319,7 +325,7 @@ class DocManagerGUI(tk.Tk, object):
 
         # description
         self.document_info_ctl_dict['descLabel'] = tk.Label(self.document_info_frame, text="description:")
-        self.document_info_ctl_dict['descText'] = tkst.ScrolledText(self.document_info_frame, height=4, wrap = tk.WORD)
+        self.document_info_ctl_dict['descText'] = tkst.ScrolledText(self.document_info_frame, height=6, wrap = tk.WORD)
 
         self.document_info_ctl_dict['descLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['descText'].grid(row=row, column=1, sticky='w')
@@ -476,7 +482,7 @@ class DocManagerGUI(tk.Tk, object):
 
                 for idx, record in enumerate(self.searchRst):
                     docId, title, type = record
-                    if type is "topic":
+                    if type == "topic":
                         descName = "topic - {title}".format(title=title)
                     else:
                         descName = title
@@ -498,8 +504,8 @@ class DocManagerGUI(tk.Tk, object):
         filterRstList.bind("<Double-Button-1>", filterRstList_double_click)
         keywordEntry.bind('<Return>', keyword_search)
 
-        keywordLabel.grid(sticky=tk.W)
-        keywordEntry.grid(row=0, column=1)
+        keywordLabel.grid(row=0, column=0, sticky=(tk.E))
+        keywordEntry.grid(row=0, column=1, sticky=(tk.W))
         filterRstList.grid(columnspan=2, sticky=(tk.E, tk.W))
 
         keyword_frame.pack()
@@ -507,11 +513,11 @@ class DocManagerGUI(tk.Tk, object):
     def __loadFromFile_window(self, loadFromFile_window):
 
         row = 0
-        # loadFromFile_window.geometry("%dx%d+%d+%d" % (
-        #             self.windowsParam['GUI_WIDTH']//2,
-        #             self.windowsParam['GUI_HEIGHT']//2,
-        #             self.winfo_screenwidth()/2 - self.windowsParam['GUI_WIDTH']//4,
-        #             self.winfo_screenheight()/2 - self.windowsParam['GUI_HEIGHT'] // 4))
+        loadFromFile_window.geometry("%dx%d+%d+%d" % (
+                    self.windowsParam['GUI_WIDTH']//2,
+                    self.windowsParam['GUI_HEIGHT']//2,
+                    self.winfo_screenwidth()/2 - self.windowsParam['GUI_WIDTH']//4,
+                    self.winfo_screenheight()/2 - self.windowsParam['GUI_HEIGHT'] // 4))
 
         def __btn_choose_docBib():
             newFilePath = tkFileDialog.askopenfilename(initialdir = ".",title = "Select file",filetypes = (("bibtext files","*.bib"),("backup files","*.bk"),("all files","*.*")))
@@ -549,6 +555,38 @@ class DocManagerGUI(tk.Tk, object):
             if len(filepath) > 0:
                 self.docManager.addConnectionFromFile(filepath, deleteAfterInsert=False)
 
+        def __btn_load_text():
+            inputString = inputText.get("1.0",tk.END)
+
+            try:
+                obj = json.loads(inputString)
+                if isinstance(obj, dict):
+                    dicList = [obj]
+                else:
+                    dicList = obj
+                for dic in dicList:
+                    if "srcDocId" in dic:
+                        self.docManager.addConnectionFromDic(dic)
+                    elif "topicId" in dic:
+                        self.docManager.insertTopicFromDic(dic)
+                    else:
+                        print("unknown input object ")
+                        print(dic)
+
+
+            except Exception as e:
+                try:
+                    print(inputString)
+                    dicList = bibtexparser.loads(inputString).entries
+                    print(dicList)
+                    self.docManager.insertDocFromDictList(dicList)
+                except Exception as e:
+                    print("cannot interpret the input string")
+                    print(e)
+                    return
+
+
+
         # bib file
         bibFileLabel = tk.Label(loadFromFile_window, text="Documents (.bib)")
         bibFilePath = tk.Entry(loadFromFile_window, text="")
@@ -585,7 +623,13 @@ class DocManagerGUI(tk.Tk, object):
         connectionFileLoad.grid(row=row, column=3, sticky="WE")
         row += 1
 
+        # place for input
+        inputText = tkst.ScrolledText(loadFromFile_window, height=4, wrap = tk.WORD)
+        inputTextLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_text)
 
+        inputText.grid(row=row, columnspan=3)
+        inputTextLoad.grid(row=row, column=3, sticky="WE")
+        row += 1
 
 
     def __build_GUI(self):
@@ -602,6 +646,8 @@ class DocManagerGUI(tk.Tk, object):
 
 
         self.title("Document Manager %s" % VERSION)
+        self.windowsParam['GUI_WIDTH'] = self.winfo_screenwidth()
+        self.windowsParam['GUI_HEIGHT'] = self.winfo_screenheight()
         self.geometry("%dx%d+%d+%d" % (
                     self.windowsParam['GUI_WIDTH'],
                     self.windowsParam['GUI_HEIGHT'],

@@ -10,15 +10,15 @@ password = "admin"
 dbName = "papers"
 sqlDelTblsFilePath = "src/dropTables.sql"
 sqlInitFilePath = "src/createTbls.sql"
-bibfile = "data/mybib.bib"
-connfile = "data/connections.json"
-topicfile = "data/topics.json"
+bibfile = "mybib.bib.bk"
+connfile = "connections.json.bk"
+topicfile = "topics.json.bk"
 
 
 docManager = DocManager()
 docManager.initConn(username, password, dbName)
-# docManager.executeScriptsFromFile(sqlDelTblsFilePath) # drop tables. DEBUG only
-# docManager.executeScriptsFromFile(sqlInitFilePath)
+docManager.executeScriptsFromFile(sqlDelTblsFilePath) # drop tables. DEBUG only
+docManager.executeScriptsFromFile(sqlInitFilePath)
 
 """insert document test"""
 docManager.insertDocFromBibFile(bibfile, deleteAfterInsert=False)
@@ -29,8 +29,8 @@ print("="*20)
 docManager.addConnectionFromFile(connfile, deleteAfterInsert=False)
 
 
-docManager.exportDocs()
-docManager.exportTopics()
-docManager.exportConnections()
+# docManager.exportDocs()
+# docManager.exportTopics()
+# docManager.exportConnections()
 
 docManager.closeConn()

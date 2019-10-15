@@ -157,7 +157,7 @@ class DocManager(object):
         try:
 
             type = bibDic['ENTRYTYPE']
-            docId = bibDic['ID']
+            docId = bibDic['ID'] + bibDic['title']
             year = bibDic['year']
             title = bibDic['title']
 
@@ -222,6 +222,8 @@ class DocManager(object):
                 topicFp.write("")
 
     def insertTopicFromDicList(self, dicList):
+        if isinstance(dicList, dict):
+            dictList = [dicList]
         for dic in dicList:
             self.insertTopicFromDic(dic)
 
@@ -247,7 +249,7 @@ class DocManager(object):
 
     """ delete a document """
     def deleteDoc(self, docId):
-        SQL = """DELETE FROM Document WHERE docID="{docId}"; """.format(docId=docId)
+        SQL = """DELETE FROM Document WHERE docID="{docId}"; """.format(docId=docId.replace('"', '""'))
         self._execSql(SQL)
 
     """ get documents """
@@ -256,7 +258,7 @@ class DocManager(object):
         return self._search(SQL)
 
     def getDocById(self, docId):
-        SQL = """SELECT docId, title, type, year, source, description, bib FROM Document WHERE docID="{docId}";""".format(docId=docId)
+        SQL = """SELECT docId, title, type, year, source, description, bib FROM Document WHERE docID="{docId}";""".format(docId=docId.replace('"', '""'))
         return self._search(SQL)
 
     def getAllTopics(self):
@@ -269,9 +271,18 @@ class DocManager(object):
         if dstDocId == srcDocId:
             print("srcDocId shouldn't equal dstDocId")
             return
+
+        """
+        tobedeleted
+        """
+        # rst = self._search("""SELECT docId from Document WHERE docId LIKE "{docId}%"; """.format(docId=srcDocId))
+        # srcDocId = rst[0, 0]
+        # rst = self._search("""SELECT docId from Document WHERE docId LIKE "{docId}%"; """.format(docId=dstDocId))
+        # dstDocId = rst[0, 0]
+
         SQL = """INSERT INTO Connection(srcDocId, dstDocId, description) VALUE("{srcDocId}", "{dstDocId}", "{description}");""".format(
-            srcDocId=srcDocId,
-            dstDocId=dstDocId,
+            srcDocId=srcDocId.replace('"', '""'),
+            dstDocId=dstDocId.replace('"', '""'),
             description=description.replace('"', '""')
         )
         try:
@@ -364,7 +375,8 @@ class DocManager(object):
         self._execSql(SQL)
 
     """export docs to bib, export topics and connections to json files """
-    def exportDocs(self, filename="mybib.bib.bk"):
+    def exportDocs(self, filename="./mybib.bib.bk"):
+        print("export documents to %s" % filename)
         SQL = "SELECT description, bib FROM Document WHERE type != 'topic';"
         docsInfo = self._search(SQL)
         bibDicList = []
@@ -375,7 +387,8 @@ class DocManager(object):
         with open(filename, 'w') as bibtexFp:
             bibtexparser.dump(self.db, bibtexFp)
 
-    def exportTopics(self, filename="topics.json.bk"):
+    def exportTopics(self, filename="./topics.json.bk"):
+        print("export topics to %s" % filename)
         SQL = "SELECT docID, title, description FROM Document WHERE type = 'topic';"
         topicInfo = self._search(SQL)
         listForJson = []
@@ -385,7 +398,8 @@ class DocManager(object):
         with open(filename, 'w') as jsonFp:
             json.dump(listForJson, jsonFp, indent=4, separators=(',', ': '))
 
-    def exportConnections(self, filename="connections.json.bk"):
+    def exportConnections(self, filename="./connections.json.bk"):
+        print("export connections to %s" % filename)
         SQL = "SELECT srcDocId, dstDocId, description FROM Connection;"
         connectionInfo = self._search(SQL)
         listForJson = []
