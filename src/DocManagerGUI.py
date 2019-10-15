@@ -33,7 +33,9 @@ class DocManagerGUI(tk.Tk, object):
             "sqlInitFilePath" : "src/createTbls.sql",
             "bibfile" : "data/mybib.bib",
             "connfile" : "data/connections.json",
-            "topicfile" : "data/topics.json"
+            "topicfile" : "data/topics.json",
+            "backupdir": ".",
+            "exportWhenClose": True
         }
         self.__load_presetInfo()
 
@@ -293,9 +295,10 @@ class DocManagerGUI(tk.Tk, object):
             print("update connection description %s-%s :\n %s" %(self.curConnPair[0], self.curConnPair[1], description))
 
         def exportToLocal_hit():
-            self.docManager.exportDocs()
-            self.docManager.exportTopics()
-            self.docManager.exportConnections()
+            backupdir = self.dbParams["backupdir"]
+            self.docManager.exportDocs(os.path.join(backupdir, "mybib.bib"))
+            self.docManager.exportTopics(os.path.join(backupdir, "topic.json"))
+            self.docManager.exportConnections(os.path.join(backupdir, "connection.json"))
 
 
         row = 0 # next available row
@@ -676,7 +679,21 @@ class DocManagerGUI(tk.Tk, object):
 
 
     def run(self):
+        def on_closing():
+            print(self.dbParams["exportWhenClose"])
+            if self.dbParams["exportWhenClose"]:
+                print("need export db")
+                backupdir = self.dbParams["backupdir"]
+                self.docManager.exportDocs(os.path.join(backupdir, "mybib.bib"))
+                self.docManager.exportTopics(os.path.join(backupdir, "topic.json"))
+                self.docManager.exportConnections(os.path.join(backupdir, "connection.json"))
+
+            self.__refresh_presetInfo()
+            self.destroy()
+
         self.__build_GUI()
+
+        self.protocol("WM_DELETE_WINDOW", on_closing)
         self.mainloop()
 
 
