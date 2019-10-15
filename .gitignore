@@ -1,10 +1,13 @@
 # MACOS 
-.DS_Store
+.DS_Storei
+
+# config/data files
 *.json
 *.bib
 *.bk
 *.bib.bk
 *.json.bk
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
