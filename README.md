@@ -11,3 +11,10 @@ Since I don't have time to familiar myself with other languages, python is the c
 
 ## Progress
 10/04/2019 I decede to ignore authors in papers and focus on the relationship between paper at present. Even though the corresponding relationships are created in the sql file, in the near future, I'm not going to realize it.
+
+10/14/2019 The current version is a useable. The GUI version looks ugly but contains most of the useful functions. To run the GUI, execute
+
+``` 
+python3 src/DocManagerGUI.py
+```
+After running once, a configuration file *config.json* will be generated at the target folder. 
