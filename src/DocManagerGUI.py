@@ -136,15 +136,15 @@ class DocManagerGUI(tk.Tk, object):
         self.document_list_ctl_dict['list'] = tk.Listbox(self.document_list_frame)
 
         self.document_list_ctl_dict['list'].bind("<<ListboxSelect>>", __list_select)
-        self.document_list_ctl_dict['list'].pack(fill=tk.BOTH, expand=1)
 
         self.document_list_ctl_dict['scrollbar'] = tk.Scrollbar(self.document_list_frame, orient="vertical")
         self.document_list_ctl_dict['scrollbar'].config(command=self.document_list_ctl_dict['list'].yview)
         self.document_list_ctl_dict['scrollbar'].pack(side="right", fill="y")
         self.document_list_ctl_dict['list'].config(yscrollcommand=self.document_list_ctl_dict['scrollbar'].set)
+        self.document_list_ctl_dict['list'].pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
         self.document_list_ctl_dict['button'] = tk.Button(self.document_list_frame, text="Load from files", command=__load_from_files)
-        self.document_list_ctl_dict['button'].pack(fill=tk.BOTH)
+        self.document_list_ctl_dict['button'].pack(side=tk.TOP, fill=tk.BOTH)
 
         self.document_list_ctl_dict['itemKey'] = []
 
@@ -307,7 +307,7 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['typeEntry'] = tk.Entry(self.document_info_frame, show=None)
 
         self.document_info_ctl_dict['typeLabel'].grid(row=row, column=0)
-        self.document_info_ctl_dict['typeEntry'].grid(row=row, column=1, sticky='w')
+        self.document_info_ctl_dict['typeEntry'].grid(row=row, column=1, sticky='we')
         row += 1
 
         # title
@@ -323,7 +323,7 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['docIdEntry'] = tk.Entry(self.document_info_frame, show=None)
 
         self.document_info_ctl_dict['docIdLabel'].grid(row=row, column=0)
-        self.document_info_ctl_dict['docIdEntry'].grid(row=row, column=1, sticky='w')
+        self.document_info_ctl_dict['docIdEntry'].grid(row=row, column=1, sticky='we')
         row += 1
 
         # description
@@ -388,13 +388,19 @@ class DocManagerGUI(tk.Tk, object):
 
     """ control the sub-module layout """
     def __layout_frames(self):
-        self.document_list_frame.config(width=self.windowsParam['GUI_WIDTH']*0.5)
-        self.document_list_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-        self.document_list_frame.pack_propagate(0)
 
-        self.document_info_frame.config(width=self.windowsParam['GUI_WIDTH']*0.5)
-        self.document_info_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-        self.document_info_frame.pack_propagate(0)
+        tk.Grid.rowconfigure(self, 0, weight=1)
+        tk.Grid.columnconfigure(self, 0, weight=1)
+        tk.Grid.columnconfigure(self, 1, weight=1)
+        # self.document_list_frame.config(width=self.windowsParam['GUI_WIDTH']*0.5)
+        # self.document_list_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+        # self.document_list_frame.pack_propagate(0)
+        self.document_list_frame.grid(row=0, column=0, sticky="SWEN")
+
+        # self.document_info_frame.config(width=self.windowsParam['GUI_WIDTH']*0.5)
+        # self.document_info_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+        # self.document_info_frame.pack_propagate(0)
+        self.document_info_frame.grid(row=0, column=1, sticky="SWEN")
 
 
     def __show_doc_info(self, docId):
@@ -468,6 +474,10 @@ class DocManagerGUI(tk.Tk, object):
 
     """search window"""
     def __show_search_window(self, search_window):
+
+        tk.Grid.rowconfigure(search_window, 0, weight=1)
+        tk.Grid.columnconfigure(search_window, 0, weight=1)
+
         self.searchRst = None
         def filterRstList_double_click(evt):
             item_id = filterRstList.curselection()
@@ -487,9 +497,11 @@ class DocManagerGUI(tk.Tk, object):
                     docId, title, type = record
                     if type == "topic":
                         descName = "topic - {title}".format(title=title)
+                        filterRstList.insert(idx, descName).itemconfig(idx, {'fg': 'orange'})
                     else:
                         descName = title
-                    filterRstList.insert(idx, descName)
+                        filterRstList.insert(idx, descName).itemconfig(idx, {'fg': 'blue'})
+
 
 
 
@@ -498,8 +510,13 @@ class DocManagerGUI(tk.Tk, object):
                     self.windowsParam['GUI_HEIGHT']//2,
                     self.winfo_screenwidth()/2 - self.windowsParam['GUI_WIDTH']//4,
                     self.winfo_screenheight()/2 - self.windowsParam['GUI_HEIGHT'] // 4))
+
+
+
         # keyword
         keyword_frame = tk.Frame(search_window)
+        keyword_frame.grid(row=0, column=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+
         keywordLabel = tk.Label(keyword_frame, text="Keywords:")
         keywordEntry = tk.Entry(keyword_frame, show=None)
         filterRstList = tk.Listbox(keyword_frame)
@@ -507,20 +524,27 @@ class DocManagerGUI(tk.Tk, object):
         filterRstList.bind("<Double-Button-1>", filterRstList_double_click)
         keywordEntry.bind('<Return>', keyword_search)
 
-        keywordLabel.grid(row=0, column=0, sticky=(tk.E))
-        keywordEntry.grid(row=0, column=1, sticky=(tk.W))
-        filterRstList.grid(columnspan=2, sticky=(tk.E, tk.W))
+        keywordLabel.grid(row=0, column=0, sticky=(tk.E, tk.W))
+        keywordEntry.grid(row=0, column=1, sticky=(tk.E, tk.W))
+        filterRstList.grid(row=1, columnspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
 
-        keyword_frame.pack()
+
+        tk.Grid.rowconfigure(keyword_frame, 0, weight=1)
+        tk.Grid.rowconfigure(keyword_frame, 1, weight=15)
+        tk.Grid.columnconfigure(keyword_frame, 0, weight=1)
+        tk.Grid.columnconfigure(keyword_frame, 1, weight=4)
+
+
+
 
     def __loadFromFile_window(self, loadFromFile_window):
 
-        row = 0
+        rows = 0
         loadFromFile_window.geometry("%dx%d+%d+%d" % (
-                    self.windowsParam['GUI_WIDTH']//2,
-                    self.windowsParam['GUI_HEIGHT']//2,
-                    self.winfo_screenwidth()/2 - self.windowsParam['GUI_WIDTH']//4,
-                    self.winfo_screenheight()/2 - self.windowsParam['GUI_HEIGHT'] // 4))
+                    self.winfo_screenwidth()/2,
+                    self.winfo_screenheight()/2,
+                    self.winfo_screenwidth()/4,
+                    self.winfo_screenheight()/4))
 
         def __btn_choose_docBib():
             newFilePath = tkFileDialog.askopenfilename(initialdir = ".",title = "Select file",filetypes = (("bibtext files","*.bib"),("backup files","*.bk"),("all files","*.*")))
@@ -596,11 +620,11 @@ class DocManagerGUI(tk.Tk, object):
         bibFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_docBib)
         bibFileLoad = tk.Button(loadFromFile_window, text="load", command=__btn_load_docBib)
 
-        bibFileLabel.grid(row=row, column=0)
-        bibFilePath.grid(row=row, column=1)
-        bibFileChooser.grid(row=row, column=2)
-        bibFileLoad.grid(row=row, column=3)
-        row += 1
+        bibFileLabel.grid(row=rows, column=0, sticky="WE")
+        bibFilePath.grid(row=rows, column=1, sticky="WE")
+        bibFileChooser.grid(row=rows, column=2, sticky="WE")
+        bibFileLoad.grid(row=rows, column=3, sticky="WE")
+        rows += 1
 
         # topic json
         topicFileLabel = tk.Label(loadFromFile_window, text="Topics (.json)")
@@ -608,11 +632,11 @@ class DocManagerGUI(tk.Tk, object):
         topicFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_topic)
         topicFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_topic)
 
-        topicFileLabel.grid(row=row, column=0)
-        topicFilePath.grid(row=row, column=1)
-        topicFileChooser.grid(row=row, column=2)
-        topicFileLoad.grid(row=row, column=3)
-        row += 1
+        topicFileLabel.grid(row=rows, column=0, sticky="WE")
+        topicFilePath.grid(row=rows, column=1, sticky="WE")
+        topicFileChooser.grid(row=rows, column=2, sticky="WE")
+        topicFileLoad.grid(row=rows, column=3, sticky="WE")
+        rows += 1
 
         # connection json
         connectionFileLabel = tk.Label(loadFromFile_window, text="Connections (.json)")
@@ -620,19 +644,28 @@ class DocManagerGUI(tk.Tk, object):
         connectionFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_conn)
         connectionFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_conn)
 
-        connectionFileLabel.grid(row=row, column=0)
-        connectionFilePath.grid(row=row, column=1)
-        connectionFileChooser.grid(row=row, column=2)
-        connectionFileLoad.grid(row=row, column=3, sticky="WE")
-        row += 1
+        connectionFileLabel.grid(row=rows, column=0, sticky="WE")
+        connectionFilePath.grid(row=rows, column=1, sticky="WE")
+        connectionFileChooser.grid(row=rows, column=2, sticky="WE")
+        connectionFileLoad.grid(row=rows, column=3, sticky="WE")
+        rows += 1
 
         # place for input
         inputText = tkst.ScrolledText(loadFromFile_window, height=4, wrap = tk.WORD)
         inputTextLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_text)
 
-        inputText.grid(row=row, columnspan=3)
-        inputTextLoad.grid(row=row, column=3, sticky="WE")
-        row += 1
+        inputText.grid(row=rows, columnspan=3, sticky="WESN")
+        inputTextLoad.grid(row=rows, column=3, sticky="WE")
+        rows += 1
+
+        for row in range(rows-1):
+            tk.Grid.rowconfigure(loadFromFile_window, row, weight=1)
+        tk.Grid.rowconfigure(loadFromFile_window, rows-1, weight=15)
+
+        tk.Grid.columnconfigure(loadFromFile_window, 0, weight=1)
+        tk.Grid.columnconfigure(loadFromFile_window, 1, weight=4)
+        tk.Grid.columnconfigure(loadFromFile_window, 2, weight=1)
+        tk.Grid.columnconfigure(loadFromFile_window, 3, weight=1)
 
 
     def __build_GUI(self):
