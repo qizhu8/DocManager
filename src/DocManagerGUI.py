@@ -169,12 +169,15 @@ class DocManagerGUI(tk.Tk, object):
 
     """ frame of document detail """
     def __init_document_info_frame(self):
+
         if self.document_info_frame is not None:
             self.document_info_frame.pack_forget()
             self.document_info_frame.destroy()
         self.document_info_frame = tk.Frame(self)
 
         self.document_info_ctl_dict = {}
+
+
 
         def __ancList_select(evt):
             item_id = self.document_info_ctl_dict['ancList'].curselection()
@@ -308,6 +311,7 @@ class DocManagerGUI(tk.Tk, object):
 
         self.document_info_ctl_dict['typeLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['typeEntry'].grid(row=row, column=1, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
 
         # title
@@ -316,6 +320,7 @@ class DocManagerGUI(tk.Tk, object):
 
         self.document_info_ctl_dict['titleLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['titleEntry'].grid(row=row, column=1, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
 
         # docId
@@ -324,6 +329,7 @@ class DocManagerGUI(tk.Tk, object):
 
         self.document_info_ctl_dict['docIdLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['docIdEntry'].grid(row=row, column=1, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
 
         # description
@@ -331,7 +337,8 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['descText'] = tkst.ScrolledText(self.document_info_frame, height=6, wrap = tk.WORD)
 
         self.document_info_ctl_dict['descLabel'].grid(row=row, column=0)
-        self.document_info_ctl_dict['descText'].grid(row=row, column=1, sticky='w')
+        self.document_info_ctl_dict['descText'].grid(row=row, column=1, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
 
         # ancester and decendants
@@ -349,12 +356,16 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['ancList'].grid(row=row, column=1, sticky='we')
         self.document_info_ctl_dict['ancAddButton'].grid(row=row+1, column=1, sticky='we')
         self.document_info_ctl_dict['ancDelButton'].grid(row=row+1, column=0, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
+        tk.Grid.rowconfigure(self.document_info_frame, row+1, weight=1)
         row += 2
 
         self.document_info_ctl_dict['deceLabel'].grid(row=row, column=0, sticky='we')
         self.document_info_ctl_dict['deceList'].grid(row=row, column=1, sticky='we')
         self.document_info_ctl_dict['deceDelButton'].grid(row=row+1, column=0, sticky='we')
         self.document_info_ctl_dict['deceAddButton'].grid(row=row+1, column=1, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
+        tk.Grid.rowconfigure(self.document_info_frame, row+1, weight=1)
         row += 2
 
         self.document_info_ctl_dict['ancList'].bind("<<ListboxSelect>>", __ancList_select)
@@ -365,11 +376,13 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['deceList'].bind("<FocusOut>", __list_focusout)
 
         # connection description
+        height=5
         self.document_info_ctl_dict['connLabel'] = tk.Label(self.document_info_frame, text="Connection Description:")
-        self.document_info_ctl_dict['connText'] = tkst.ScrolledText(self.document_info_frame, height=4, wrap = tk.WORD)
+        self.document_info_ctl_dict['connText'] = tkst.ScrolledText(self.document_info_frame, height=height, wrap = tk.WORD)
 
         self.document_info_ctl_dict['connLabel'].grid(row=row, column=0)
-        self.document_info_ctl_dict['connText'].grid(row=row, column=1, sticky='w')
+        self.document_info_ctl_dict['connText'].grid(row=row, column=1, sticky='we')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=height)
         row += 1
 
         # update info
@@ -378,11 +391,16 @@ class DocManagerGUI(tk.Tk, object):
 
         self.document_info_ctl_dict['updateConnButton'].grid(row=row, column=0, sticky='w')
         self.document_info_ctl_dict['updateDocButton'].grid(row=row, column=1, sticky='w')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
 
         self.document_info_ctl_dict['exportButton'] = tk.Button(self.document_info_frame, text="Export to local", command=exportToLocal_hit)
         self.document_info_ctl_dict['exportButton'].grid(row=row, columnspan=3, sticky='w')
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
+
+        tk.Grid.columnconfigure(self.document_info_frame, 0, weight=1)
+        tk.Grid.columnconfigure(self.document_info_frame, 1, weight=4)
 
 
 
@@ -396,12 +414,12 @@ class DocManagerGUI(tk.Tk, object):
         # self.document_list_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         # self.document_list_frame.pack_propagate(0)
         self.document_list_frame.grid(row=0, column=0, sticky="SWEN")
-
+        self.document_list_frame.config(bg='grey')
         # self.document_info_frame.config(width=self.windowsParam['GUI_WIDTH']*0.5)
         # self.document_info_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         # self.document_info_frame.pack_propagate(0)
         self.document_info_frame.grid(row=0, column=1, sticky="SWEN")
-
+        self.document_info_frame.config(bg='grey')
 
     def __show_doc_info(self, docId):
         if docId == "No Document":
