@@ -352,7 +352,7 @@ class DocManager(object):
             SQL = """UPDATE Document SET {category}="{newVal}" WHERE docId="{docId}"; """.format(
             category=category,
             newVal=newVal.replace('"', '""'),
-            docId=docId
+            docId=docId.replace('"', '""'),
         )
         else:
             SQL = """UPDATE Document SET {category}={newVal} WHERE docId="{docId}"; """.format(
@@ -360,7 +360,7 @@ class DocManager(object):
             newVal=newVal,
             docId=docId
         )
-        print(SQL)
+        print("update %s" % docId)
         self._execSql(SQL)
 
     """modify Connection"""

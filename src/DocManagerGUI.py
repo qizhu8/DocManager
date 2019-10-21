@@ -42,7 +42,8 @@ class DocManagerGUI(tk.Tk, object):
             "background": "grey",
             "topicColor": "green",
             "docColor": "blue",
-            "default": "black"
+            "default": "black",
+            "fontAndSize": ("", 18)
         }
         self.__load_presetInfo()
 
@@ -119,9 +120,10 @@ class DocManagerGUI(tk.Tk, object):
 
 
         """
-        | Documents:  |
-        | ----------- |
-        | list of doc |
+        | Documents:     |
+        | keyword filter |
+        | -------------- |
+        | list of docs   |
         """
 
         def __list_select(evt):
@@ -138,15 +140,33 @@ class DocManagerGUI(tk.Tk, object):
             self.__loadFromFile_window(loadFromFile_window)
             self.wait_window(loadFromFile_window)
             self.__show_doc_list()
-            pass
+
+
+        def keyword_search(evt):
+            keyword = self.document_list_ctl_dict['filter'].get()
+            if keyword != "filtered by keywords":
+                self.__show_doc_list(keyword)
+
 
         # create each control and save them into a dict
         self.document_list_ctl_dict = {}
 
-        self.document_list_ctl_dict['label'] = tk.Label(self.document_list_frame, text="Documents:", fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_list_ctl_dict['label'] = tk.Label(self.document_list_frame, text="Documents:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
         self.document_list_ctl_dict['label'].pack(fill=tk.BOTH)
 
-        self.document_list_ctl_dict['list'] = tk.Listbox(self.document_list_frame, bg=self.themeParams["background"])
+        self.document_list_ctl_dict['filter'] = tk.Entry(self.document_list_frame,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_list_ctl_dict['filter'].insert(tk.END, 'filtered by keywords')
+
+        self.document_list_ctl_dict['filter'].pack(fill=tk.BOTH)
+        self.document_list_ctl_dict['filter'].bind('<Return>', keyword_search)
+
+        self.document_list_ctl_dict['list'] = tk.Listbox(self.document_list_frame,
+            font=self.themeParams["fontAndSize"],
+            bg=self.themeParams["background"])
 
         self.document_list_ctl_dict['list'].bind("<<ListboxSelect>>", __list_select)
 
@@ -156,17 +176,25 @@ class DocManagerGUI(tk.Tk, object):
         self.document_list_ctl_dict['list'].config(yscrollcommand=self.document_list_ctl_dict['scrollbar'].set)
         self.document_list_ctl_dict['list'].pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-        self.document_list_ctl_dict['button'] = tk.Button(self.document_list_frame, text="Load from files", command=__load_from_files, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_list_ctl_dict['button'] = tk.Button(self.document_list_frame, text="Load from files", command=__load_from_files,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+
         self.document_list_ctl_dict['button'].pack(side=tk.TOP, fill=tk.BOTH)
 
         self.document_list_ctl_dict['itemKey'] = []
 
 
-    def __show_doc_list(self):
+    def __show_doc_list(self, keyword=None):
         self.__clear_conn_info()
         self.document_list_ctl_dict['itemKey'] = []
         self.document_list_ctl_dict['list'].delete(0, tk.END)
-        for idx, record in enumerate(self.docManager.getAllDocs()):
+        if keyword is None or len(keyword) == 0:
+            docsToShow = self.docManager.getAllDocs()
+        else:
+            docsToShow = self.docManager.searchDocWithKeyword(keyword)
+
+        for idx, record in enumerate(docsToShow):
             docId, title, type = record
             if type == "topic":
                 descName = "topic - {title}".format(title=title)
@@ -319,8 +347,12 @@ class DocManagerGUI(tk.Tk, object):
 
         row = 0 # next available row
         # type
-        self.document_info_ctl_dict['typeLabel'] = tk.Label(self.document_info_frame, text="type:", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['typeEntry'] = tk.Entry(self.document_info_frame, show=None, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['typeLabel'] = tk.Label(self.document_info_frame, text="type:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['typeEntry'] = tk.Entry(self.document_info_frame, show=None,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         self.document_info_ctl_dict['typeLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['typeEntry'].grid(row=row, column=1, sticky='we')
@@ -328,8 +360,12 @@ class DocManagerGUI(tk.Tk, object):
         row += 1
 
         # title
-        self.document_info_ctl_dict['titleLabel'] = tk.Label(self.document_info_frame, text="title:", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['titleEntry'] = tk.Entry(self.document_info_frame, show=None, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['titleLabel'] = tk.Label(self.document_info_frame, text="title:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['titleEntry'] = tk.Entry(self.document_info_frame, show=None,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         self.document_info_ctl_dict['titleLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['titleEntry'].grid(row=row, column=1, sticky='we')
@@ -337,8 +373,12 @@ class DocManagerGUI(tk.Tk, object):
         row += 1
 
         # docId
-        self.document_info_ctl_dict['docIdLabel'] = tk.Label(self.document_info_frame, text="id:", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['docIdEntry'] = tk.Entry(self.document_info_frame, show=None, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['docIdLabel'] = tk.Label(self.document_info_frame, text="id:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['docIdEntry'] = tk.Entry(self.document_info_frame, show=None,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         self.document_info_ctl_dict['docIdLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['docIdEntry'].grid(row=row, column=1, sticky='we')
@@ -347,24 +387,49 @@ class DocManagerGUI(tk.Tk, object):
 
         # description
         height=15
-        self.document_info_ctl_dict['descLabel'] = tk.Label(self.document_info_frame, text="description:", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['descText'] = tkst.ScrolledText(self.document_info_frame, height=height, wrap = tk.WORD, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['descLabel'] = tk.Label(self.document_info_frame, text="description:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['descText'] = tkst.ScrolledText(self.document_info_frame, height=height,
+            wrap = tk.WORD, font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         self.document_info_ctl_dict['descLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['descText'].grid(row=row, column=1, sticky='wesn')
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=height)
         row += 1
 
-        # ancester and decendants
-        self.document_info_ctl_dict['ancLabel'] = tk.Label(self.document_info_frame, text="ancesters:", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['ancList'] = tk.Listbox(self.document_info_frame, bg=self.themeParams["background"])
-        self.document_info_ctl_dict['ancAddButton'] = tk.Button(self.document_info_frame, text="add ancesters", command=ancAdd_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['ancDelButton'] = tk.Button(self.document_info_frame, text="del ancesters", command=ancDel_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        # update doc info
+        self.document_info_ctl_dict['updateDocButton'] = tk.Button(self.document_info_frame, text="Update Doc Info", command=updateDoc_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['updateDocButton'].grid(row=row, columnspan=2, sticky='we')
+        row += 1
+        tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
 
-        self.document_info_ctl_dict['deceLabel'] = tk.Label(self.document_info_frame, text="followers:", fg=self.themeParams["default"], bg=self.themeParams["background"])
+
+        # ancester and decendants
+        self.document_info_ctl_dict['ancLabel'] = tk.Label(self.document_info_frame, text="ancesters:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['ancList'] = tk.Listbox(self.document_info_frame, bg=self.themeParams["background"])
+        self.document_info_ctl_dict['ancAddButton'] = tk.Button(self.document_info_frame, text="Add Ancesters", command=ancAdd_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['ancDelButton'] = tk.Button(self.document_info_frame, text="Delete Ancesters", command=ancDel_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+
+        self.document_info_ctl_dict['deceLabel'] = tk.Label(self.document_info_frame, text="followers:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
         self.document_info_ctl_dict['deceList'] = tk.Listbox(self.document_info_frame, bg=self.themeParams["background"])
-        self.document_info_ctl_dict['deceAddButton'] = tk.Button(self.document_info_frame, text="add decendants", command=deceAdd_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['deceDelButton'] = tk.Button(self.document_info_frame, text="del decendants", command=deceDel_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['deceAddButton'] = tk.Button(self.document_info_frame, text="Add Decendants", command=deceAdd_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['deceDelButton'] = tk.Button(self.document_info_frame, text="Delete Decendants", command=deceDel_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         self.document_info_ctl_dict['ancLabel'].grid(row=row, column=0, sticky='we')
         self.document_info_ctl_dict['ancList'].grid(row=row, column=1, sticky='we')
@@ -391,24 +456,30 @@ class DocManagerGUI(tk.Tk, object):
 
         # connection description
         height=5
-        self.document_info_ctl_dict['connLabel'] = tk.Label(self.document_info_frame, text="Connection Description:", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['connText'] = tkst.ScrolledText(self.document_info_frame, height=height, wrap = tk.WORD, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['connLabel'] = tk.Label(self.document_info_frame, text="Connection Description:",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['connText'] = tkst.ScrolledText(self.document_info_frame, height=height, wrap = tk.WORD,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         self.document_info_ctl_dict['connLabel'].grid(row=row, column=0)
         self.document_info_ctl_dict['connText'].grid(row=row, column=1, sticky='wesn')
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=height)
         row += 1
 
-        # update info
-        self.document_info_ctl_dict['updateDocButton'] = tk.Button(self.document_info_frame, text="Update Doc Info", command=updateDoc_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        self.document_info_ctl_dict['updateConnButton'] = tk.Button(self.document_info_frame, text="Update Conn Info", command=updateConn_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        # update conn info
+        self.document_info_ctl_dict['updateConnButton'] = tk.Button(self.document_info_frame, text="Update Conn Info", command=updateConn_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
-        self.document_info_ctl_dict['updateConnButton'].grid(row=row, column=0, sticky='we')
-        self.document_info_ctl_dict['updateDocButton'].grid(row=row, column=1, sticky='we')
+        self.document_info_ctl_dict['updateConnButton'].grid(row=row, columnspan=2, sticky='we')
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
 
-        self.document_info_ctl_dict['exportButton'] = tk.Button(self.document_info_frame, text="Export to local", command=exportToLocal_hit, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        self.document_info_ctl_dict['exportButton'] = tk.Button(self.document_info_frame, text="Export to local", command=exportToLocal_hit,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
         self.document_info_ctl_dict['exportButton'].grid(row=row, columnspan=3, sticky='we')
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
@@ -658,10 +729,18 @@ class DocManagerGUI(tk.Tk, object):
 
 
         # bib file
-        bibFileLabel = tk.Label(loadFromFile_window, text="Documents (.bib)", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        bibFilePath = tk.Entry(loadFromFile_window, text="", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        bibFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_docBib, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        bibFileLoad = tk.Button(loadFromFile_window, text="load", command=__btn_load_docBib, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        bibFileLabel = tk.Label(loadFromFile_window, text="Documents (.bib)",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        bibFilePath = tk.Entry(loadFromFile_window, text="",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        bibFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_docBib,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        bibFileLoad = tk.Button(loadFromFile_window, text="load", command=__btn_load_docBib,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         bibFileLabel.grid(row=rows, column=0, sticky="WE")
         bibFilePath.grid(row=rows, column=1, sticky="WE")
@@ -670,10 +749,18 @@ class DocManagerGUI(tk.Tk, object):
         rows += 1
 
         # topic json
-        topicFileLabel = tk.Label(loadFromFile_window, text="Topics (.json)", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        topicFilePath = tk.Entry(loadFromFile_window, text="", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        topicFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_topic, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        topicFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_topic, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        topicFileLabel = tk.Label(loadFromFile_window, text="Topics (.json)",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        topicFilePath = tk.Entry(loadFromFile_window, text="",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        topicFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_topic,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        topicFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_topic,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         topicFileLabel.grid(row=rows, column=0, sticky="WE")
         topicFilePath.grid(row=rows, column=1, sticky="WE")
@@ -682,10 +769,18 @@ class DocManagerGUI(tk.Tk, object):
         rows += 1
 
         # connection json
-        connectionFileLabel = tk.Label(loadFromFile_window, text="Connections (.json)", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        connectionFilePath = tk.Entry(loadFromFile_window, text="", fg=self.themeParams["default"], bg=self.themeParams["background"])
-        connectionFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_conn, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        connectionFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_conn, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        connectionFileLabel = tk.Label(loadFromFile_window, text="Connections (.json)",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        connectionFilePath = tk.Entry(loadFromFile_window, text="",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        connectionFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_conn,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        connectionFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_conn,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         connectionFileLabel.grid(row=rows, column=0, sticky="WE")
         connectionFilePath.grid(row=rows, column=1, sticky="WE")
@@ -694,8 +789,12 @@ class DocManagerGUI(tk.Tk, object):
         rows += 1
 
         # place for input
-        inputText = tkst.ScrolledText(loadFromFile_window, height=4, wrap = tk.WORD, fg=self.themeParams["default"], bg=self.themeParams["background"])
-        inputTextLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_text, fg=self.themeParams["default"], bg=self.themeParams["background"])
+        inputText = tkst.ScrolledText(loadFromFile_window, height=4, wrap = tk.WORD,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        inputTextLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_text,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
 
         inputText.grid(row=rows, columnspan=3, sticky="WESN")
         inputTextLoad.grid(row=rows, column=3, sticky="WE")
