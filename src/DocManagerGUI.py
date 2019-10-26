@@ -106,6 +106,7 @@ class DocManagerGUI(tk.Tk, object):
         with open(configFilePath, 'w+') as f:
             json.dump(configDic, f, indent=4, separators=(',', ': '))
 
+    
 
     """
     create each control
@@ -117,7 +118,7 @@ class DocManagerGUI(tk.Tk, object):
             self.document_list_frame.pack_forget()
             self.document_list_frame.destroy()
         self.document_list_frame = tk.Frame(self)
-
+        self.document_list_frame.config(bg=self.themeParams["background"])
 
         """
         | Documents:     |
@@ -178,7 +179,7 @@ class DocManagerGUI(tk.Tk, object):
 
         self.document_list_ctl_dict['button'] = tk.Button(self.document_list_frame, text="Load from files", command=__load_from_files,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         self.document_list_ctl_dict['button'].pack(side=tk.TOP, fill=tk.BOTH)
 
@@ -216,6 +217,7 @@ class DocManagerGUI(tk.Tk, object):
             self.document_info_frame.destroy()
         self.document_info_frame = tk.Frame(self)
 
+        self.document_info_frame.config(bg=self.themeParams["background"])
         self.document_info_ctl_dict = {}
 
 
@@ -402,7 +404,7 @@ class DocManagerGUI(tk.Tk, object):
         # update doc info
         self.document_info_ctl_dict['updateDocButton'] = tk.Button(self.document_info_frame, text="Update Doc Info", command=updateDoc_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         self.document_info_ctl_dict['updateDocButton'].grid(row=row, columnspan=2, sticky='we')
         row += 1
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
@@ -415,10 +417,10 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['ancList'] = tk.Listbox(self.document_info_frame, bg=self.themeParams["background"])
         self.document_info_ctl_dict['ancAddButton'] = tk.Button(self.document_info_frame, text="Add Ancesters", command=ancAdd_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         self.document_info_ctl_dict['ancDelButton'] = tk.Button(self.document_info_frame, text="Delete Ancesters", command=ancDel_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         self.document_info_ctl_dict['deceLabel'] = tk.Label(self.document_info_frame, text="followers:",
             font=self.themeParams["fontAndSize"],
@@ -426,10 +428,10 @@ class DocManagerGUI(tk.Tk, object):
         self.document_info_ctl_dict['deceList'] = tk.Listbox(self.document_info_frame, bg=self.themeParams["background"])
         self.document_info_ctl_dict['deceAddButton'] = tk.Button(self.document_info_frame, text="Add Decendants", command=deceAdd_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         self.document_info_ctl_dict['deceDelButton'] = tk.Button(self.document_info_frame, text="Delete Decendants", command=deceDel_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         self.document_info_ctl_dict['ancLabel'].grid(row=row, column=0, sticky='we')
         self.document_info_ctl_dict['ancList'].grid(row=row, column=1, sticky='we')
@@ -471,7 +473,7 @@ class DocManagerGUI(tk.Tk, object):
         # update conn info
         self.document_info_ctl_dict['updateConnButton'] = tk.Button(self.document_info_frame, text="Update Conn Info", command=updateConn_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         self.document_info_ctl_dict['updateConnButton'].grid(row=row, columnspan=2, sticky='we')
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
@@ -479,7 +481,7 @@ class DocManagerGUI(tk.Tk, object):
 
         self.document_info_ctl_dict['exportButton'] = tk.Button(self.document_info_frame, text="Export to local", command=exportToLocal_hit,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         self.document_info_ctl_dict['exportButton'].grid(row=row, columnspan=3, sticky='we')
         tk.Grid.rowconfigure(self.document_info_frame, row, weight=1)
         row += 1
@@ -499,12 +501,10 @@ class DocManagerGUI(tk.Tk, object):
         # self.document_list_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         # self.document_list_frame.pack_propagate(0)
         self.document_list_frame.grid(row=0, column=0, sticky="SWEN")
-        self.document_list_frame.config(bg='grey')
         # self.document_info_frame.config(width=self.windowsParam['GUI_WIDTH']*0.5)
         # self.document_info_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         # self.document_info_frame.pack_propagate(0)
         self.document_info_frame.grid(row=0, column=1, sticky="SWEN")
-        self.document_info_frame.config(bg='grey')
 
     def __show_doc_info(self, docId):
         if docId == "No Document":
@@ -737,10 +737,10 @@ class DocManagerGUI(tk.Tk, object):
             fg=self.themeParams["default"], bg=self.themeParams["background"])
         bibFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_docBib,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         bibFileLoad = tk.Button(loadFromFile_window, text="load", command=__btn_load_docBib,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         bibFileLabel.grid(row=rows, column=0, sticky="WE")
         bibFilePath.grid(row=rows, column=1, sticky="WE")
@@ -757,10 +757,10 @@ class DocManagerGUI(tk.Tk, object):
             fg=self.themeParams["default"], bg=self.themeParams["background"])
         topicFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_topic,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         topicFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_topic,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         topicFileLabel.grid(row=rows, column=0, sticky="WE")
         topicFilePath.grid(row=rows, column=1, sticky="WE")
@@ -777,10 +777,10 @@ class DocManagerGUI(tk.Tk, object):
             fg=self.themeParams["default"], bg=self.themeParams["background"])
         connectionFileChooser = tk.Button(loadFromFile_window, text="choose file", command=__btn_choose_conn,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
         connectionFileLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_conn,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         connectionFileLabel.grid(row=rows, column=0, sticky="WE")
         connectionFilePath.grid(row=rows, column=1, sticky="WE")
@@ -794,7 +794,7 @@ class DocManagerGUI(tk.Tk, object):
             fg=self.themeParams["default"], bg=self.themeParams["background"])
         inputTextLoad = tk.Button(loadFromFile_window, text="Load", command=__btn_load_text,
             font=self.themeParams["fontAndSize"],
-            fg=self.themeParams["default"], bg=self.themeParams["background"])
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
         inputText.grid(row=rows, columnspan=3, sticky="WESN")
         inputTextLoad.grid(row=rows, column=3, sticky="WE")

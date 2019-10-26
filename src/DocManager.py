@@ -68,6 +68,11 @@ class DocManager(object):
                     print("[-] MySQLError during execute statement")
                     print(e)
 
+    # This function deletes existing tables amd rebuilds them.
+    def initializeDB(self, createTblsSQL, deleteTblsSQL):
+        
+
+
     def _isConnect(self):
         if self.conn == -1:
             raise Exception("[-] please connect the database using initConn(...) first")
@@ -360,7 +365,7 @@ class DocManager(object):
             newVal=newVal,
             docId=docId
         )
-        print("update %s" % docId)
+        print("update %s %s" % (docId, category))
         self._execSql(SQL)
 
     """modify Connection"""
