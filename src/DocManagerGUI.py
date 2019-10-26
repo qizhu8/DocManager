@@ -13,6 +13,17 @@ from DocManager import DocManager
 
 VERSION = "1.0.0"
 
+HELP_MESSAGE =\
+""" Program Usage
+1. Load bibfile
+    Click the "Load "
+"""
+
+ABOUT_AUTHOR_MESSAGE=\
+"""
+This program is developed by Yu Wang 10/26/2019.
+You are welcomed to contact the author via wangy52@rpi.edu.
+"""
 
 class DocManagerGUI(tk.Tk, object):
     """
@@ -30,11 +41,6 @@ class DocManagerGUI(tk.Tk, object):
             "username" : "root",
             "password" : "admin",
             "dbName" : "papers",
-            "sqlDelTblsFilePath" : "src/dropTables.sql",
-            "sqlInitFilePath" : "src/createTbls.sql",
-            "bibfile" : "data/mybib.bib",
-            "connfile" : "data/connections.json",
-            "topicfile" : "data/topics.json",
             "backupdir": ".",
             "exportWhenClose": True
         }
@@ -106,7 +112,7 @@ class DocManagerGUI(tk.Tk, object):
         with open(configFilePath, 'w+') as f:
             json.dump(configDic, f, indent=4, separators=(',', ': '))
 
-    
+
 
     """
     create each control
@@ -649,6 +655,30 @@ class DocManagerGUI(tk.Tk, object):
         tk.Grid.columnconfigure(keyword_frame, 1, weight=4)
 
 
+    def __menu(self):
+        def __show_help():
+            tkmsg.showinfo("Help", HELP_MESSAGE)
+
+        def __show_about_author():
+            tkmsg.showinfo("About", ABOUT_AUTHOR_MESSAGE)
+
+        def __reset_database():
+            ans = tkmsg.askokcancel("Warning","Would you like to delete all data?")
+            if ans:
+                self.docManager.deleteTbls()
+                self.docManager.createTbls()
+                self.__show_doc_list()
+
+        self.menubar = tk.Menu(self)
+        filemenu = tk.Menu(self.menubar, tearoff=0)
+        aboutmenu = tk.Menu(self.menubar, tearoff=0)
+
+        self.menubar.add_cascade(label='File', menu=filemenu)
+        filemenu.add_command(label='Reset Database', command=lambda: __reset_database())
+        filemenu.add_command(label='Help', command=lambda: __show_help())
+        #
+        self.menubar.add_cascade(label='About', menu=aboutmenu)
+        aboutmenu.add_command(label='About author', command=lambda: __show_about_author())
 
 
     def __loadFromFile_window(self, loadFromFile_window):
@@ -837,13 +867,12 @@ class DocManagerGUI(tk.Tk, object):
         # bind close event
         self.protocol("WM_DELETE_WINDOW", on_closing)
 
-
-
-
-
         # initialize each frame
         self.__init_document_list_frame()
         self.__init_document_info_frame()
+
+        # initialize menubar
+        self.__menu()
 
         # layout frames
         self.__layout_frames()
@@ -867,7 +896,8 @@ class DocManagerGUI(tk.Tk, object):
             self.destroy()
 
         self.__build_GUI()
-
+        # add menu
+        self.config(menu=self.menubar)
         self.protocol("WM_DELETE_WINDOW", on_closing)
         self.mainloop()
 
