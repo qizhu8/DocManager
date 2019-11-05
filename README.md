@@ -14,6 +14,15 @@ Since I don't have time to familiar myself with other languages, python is the c
 
 10/14/2019 The current version is a useable. The GUI version looks ugly but contains most of the useful functions. To run the GUI, execute
 
+## How to run
+
+### Pre-requests
+
+```
+pip3 install bibtexparser mysqlclient numpy
+```
+
+
 ``` 
 python3 src/DocManagerGUI.py
 ```

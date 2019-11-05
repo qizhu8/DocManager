@@ -59,6 +59,7 @@ class DocManagerGUI(tk.Tk, object):
         self.docManager = DocManager()
         try:
             self.docManager.initConn(self.dbParams["username"], self.dbParams["password"], self.dbParams["dbName"])
+            self.docManager.createTbls() # create tables if doesn't exists
         except Exception as e:
             print("Fail to connect to the server")
             print(e)
