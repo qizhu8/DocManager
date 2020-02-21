@@ -714,6 +714,11 @@ class DocManagerGUI(tk.Tk, object):
             filepath = topicFilePath.get()
             if len(filepath) > 0:
                 self.docManager.insertTopicFromFile(filepath, deleteAfterInsert=False)
+        
+        def __btn_load_topic_quick():
+            topic = topicName.get()
+            if len(topic) > 0:
+                self.docManager.insertTopic(topicId=topic, name=topic)
 
         def __btn_choose_conn():
             newFilePath = tkFileDialog.askopenfilename(initialdir = ".",title = "Select file",filetypes = (("json files","*.json"),("backup files","*.bk"),("all files","*.*")))
@@ -799,6 +804,23 @@ class DocManagerGUI(tk.Tk, object):
         topicFileLoad.grid(row=rows, column=3, sticky="WE")
         rows += 1
 
+        # topic quick insert
+        topicQuickLabel = tk.Label(loadFromFile_window, text="Topic Text",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        topicName = tk.Entry(loadFromFile_window, text="",
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"])
+        topicAdd = tk.Button(loadFromFile_window, text="Load", command=__btn_load_topic_quick,
+            font=self.themeParams["fontAndSize"],
+            fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
+
+        topicQuickLabel.grid(row=rows, column=0, sticky="WE")
+        topicName.grid(row=rows, column=1, sticky="WE")
+        # topicFileChooser.grid(row=rows, column=2, sticky="WE")
+        topicAdd.grid(row=rows, column=2, columnspan=2, sticky="WE")
+        rows += 1
+
         # connection json
         connectionFileLabel = tk.Label(loadFromFile_window, text="Connections (.json)",
             font=self.themeParams["fontAndSize"],
@@ -827,7 +849,7 @@ class DocManagerGUI(tk.Tk, object):
             font=self.themeParams["fontAndSize"],
             fg=self.themeParams["default"], bg=self.themeParams["background"], highlightbackground=self.themeParams["background"])
 
-        inputText.grid(row=rows, columnspan=3, sticky="WESN")
+        inputText.grid(row=rows, column=0, columnspan=2, sticky="WESN")
         inputTextLoad.grid(row=rows, column=3, sticky="WE")
         rows += 1
 
@@ -835,11 +857,10 @@ class DocManagerGUI(tk.Tk, object):
             tk.Grid.rowconfigure(loadFromFile_window, row, weight=1)
         tk.Grid.rowconfigure(loadFromFile_window, rows-1, weight=15)
 
-        tk.Grid.columnconfigure(loadFromFile_window, 0, weight=1)
-        tk.Grid.columnconfigure(loadFromFile_window, 1, weight=4)
+        tk.Grid.columnconfigure(loadFromFile_window, 0, weight=0.5)
+        tk.Grid.columnconfigure(loadFromFile_window, 1, weight=3)
         tk.Grid.columnconfigure(loadFromFile_window, 2, weight=1)
         tk.Grid.columnconfigure(loadFromFile_window, 3, weight=1)
-
 
     def __build_GUI(self):
         def configure(event):
