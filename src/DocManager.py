@@ -208,7 +208,7 @@ class DocManager(object):
     def insertDocFromBibDic(self, bibDic, description=""):
         try:
 
-            type = bibDic['ENTRYTYPE']
+            doctype = bibDic['ENTRYTYPE']
             docId = bibDic['ID'] + bibDic['title']
             year = bibDic['year']
             title = bibDic['title']
@@ -228,7 +228,7 @@ class DocManager(object):
 
             self._insertDoc(docId=docId,
                             title=title,
-                            type=type,
+                            type=doctype,
                             year=year,
                             source=source,
                             description=description,
@@ -306,7 +306,7 @@ class DocManager(object):
 
     """ get documents """
     def getAllDocs(self):
-        SQL = """SELECT docId, title, type FROM Document ORDER BY title;"""
+        SQL = """(SELECT docId, title, type FROM Document WHERE type="topic" ORDER BY title) UNION (SELECT docId, title, type FROM Document WHERE type<>"topic" ORDER BY title);"""
         return self._search(SQL)
 
     def getDocById(self, docId):
